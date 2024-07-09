@@ -13,7 +13,7 @@ TEST(Tetromino_I_Creation, TetrominoI) {
   AbstractTetromino *tetrI = new TetrominoI();
 
   ASSERT_EQ(4, tetrI->getTetrominoSize());
-  ASSERT_EQ(90, tetrI->getTetrominoAngle());
+  ASSERT_EQ(90, tetrI->getCurrentAngle());
   ASSERT_FALSE(tetrI->getCurrentLocation().empty());
 
   // Avoid memory leaks!
@@ -46,12 +46,12 @@ TEST(Tetromino_I_RightRotation, TetrominoI) {
 
   // Test right rotation 90 --> 180
   std::vector<Point> locationBeforeRotation = tetrI->getCurrentLocation();
-  int angleBeforeRotation = tetrI->getTetrominoAngle();
+  int angleBeforeRotation = tetrI->getCurrentAngle();
 
   tetrI->rotateRight();
 
   std::vector<Point> locationAfterRotation = tetrI->getCurrentLocation();
-  int angleAfterRotation = tetrI->getTetrominoAngle();
+  int angleAfterRotation = tetrI->getCurrentAngle();
 
   // Compare angles and coordinates after one right rotation
   ASSERT_EQ(angleBeforeRotation + 90, angleAfterRotation);
@@ -71,7 +71,7 @@ TEST(Tetromino_I_RightRotation, TetrominoI) {
   // Test full circle right rotation 180 ---> 0 ---> 90 ---> 180;
   std::vector<Point> locationBeforeFullCircleRotation =
       tetrI->getCurrentLocation();
-  int angleBeforeFullCircleRotation = tetrI->getTetrominoAngle();
+  int angleBeforeFullCircleRotation = tetrI->getCurrentAngle();
 
   tetrI->rotateRight();
   tetrI->rotateRight();
@@ -79,7 +79,7 @@ TEST(Tetromino_I_RightRotation, TetrominoI) {
 
   std::vector<Point> locationAfterFullCircleRotation =
       tetrI->getCurrentLocation();
-  int angleAfterFullCircleRotation = tetrI->getTetrominoAngle();
+  int angleAfterFullCircleRotation = tetrI->getCurrentAngle();
 
   // After full cycle coordinates and angle should remain the same
   ASSERT_EQ(angleBeforeFullCircleRotation, angleAfterFullCircleRotation);
@@ -100,12 +100,12 @@ TEST(Tetromino_I_LeftRotation, TetrominoI) {
 
   // Test left rotation
   std::vector<Point> locationBeforeRotation = tetrI->getCurrentLocation();
-  int angleBeforeRotation = tetrI->getTetrominoAngle();
+  int angleBeforeRotation = tetrI->getCurrentAngle();
 
   tetrI->rotateLeft();
 
   std::vector<Point> locationAfterRotation = tetrI->getCurrentLocation();
-  int angleAfterRotation = tetrI->getTetrominoAngle();
+  int angleAfterRotation = tetrI->getCurrentAngle();
 
   ASSERT_EQ(angleBeforeRotation - 90, angleAfterRotation);
 
@@ -122,7 +122,7 @@ TEST(Tetromino_I_LeftRotation, TetrominoI) {
   // Test full circle left rotation 0 <--- 90 <--- 180 <--- 0;
   std::vector<Point> locationBeforeFullCircleRotation =
       tetrI->getCurrentLocation();
-  int angleBeforeFullCircleRotation = tetrI->getTetrominoAngle();
+  int angleBeforeFullCircleRotation = tetrI->getCurrentAngle();
 
   tetrI->rotateLeft();
   tetrI->rotateLeft();
@@ -130,7 +130,7 @@ TEST(Tetromino_I_LeftRotation, TetrominoI) {
 
   std::vector<Point> locationAfterFullCircleRotation =
       tetrI->getCurrentLocation();
-  int angleAfterFullCircleRotation = tetrI->getTetrominoAngle();
+  int angleAfterFullCircleRotation = tetrI->getCurrentAngle();
 
   // After full cycle coordinates and angle should remain the same
   ASSERT_EQ(angleBeforeFullCircleRotation, angleAfterFullCircleRotation);

@@ -32,5 +32,5 @@ public:
   virtual std::vector<Point> getCurrentLocation() = 0;
   virtual int getTetrominoColor() const = 0;
   virtual int getTetrominoSize() const = 0;
-  virtual int getTetrominoAngle() const = 0;
+  virtual int getCurrentAngle() const = 0;
 };

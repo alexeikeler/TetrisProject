@@ -29,7 +29,7 @@ public:
   std::vector<Point> getCurrentLocation() override { return currentLocation_; }
   int getTetrominoColor() const override { return color_; }
   int getTetrominoSize() const override { return size_; }
-  int getTetrominoAngle() const override { return currentAngle_; }
+  int getCurrentAngle() const override { return currentAngle_; }
 
   void setCurrentLocation(std::vector<Point> location) override;
   void setCurrentAngle(int angle) override;

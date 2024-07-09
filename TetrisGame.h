@@ -3,6 +3,9 @@
 
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
+#include <unordered_map>
+
+enum class Collision {Roof, Wall, Floor, Block, Nothing};
 
 class TetrisGame {
 public:
@@ -12,10 +15,12 @@ public:
   void drawScore();
   void drawNextTetromino();
   void drawGameField();
+  
+  void placeTetromino();
 
   void play();
   void decideAction(UserInput userInput);
-  bool isColliding();
+  Collision isColliding();
   void drawTetromino();
 
   // Removing in this context means
@@ -39,6 +44,8 @@ private:
   // will be stored. Based on values of this array
   // we will draw the picture on the screen.
   // int gameField[rows_][cols_];
+  std::unordered_map<Point, bool> gameField;
+
 
   // To put our "game screen" in the middle
   // we will need some offset
