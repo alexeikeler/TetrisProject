@@ -24,6 +24,9 @@ public:
   virtual void rotateLeft() = 0;
   // Rotate right
   virtual void rotateRight() = 0;
+ 
+  virtual void setCurrentLocation(std::vector<Point> location) = 0;
+  virtual void setCurrentAngle(int angle) = 0;
 
   // Get current coordinates, color, size (number of pixels), angle
   virtual std::vector<Point> getCurrentLocation() = 0;

@@ -46,8 +46,6 @@ bool TetrisGame::isColliding() {
 
 void TetrisGame::decideAction(UserInput userInput) {
 
-  removeTetrominoFromScreen();
-
   // For now it's a simple collision with walls
   // later I'll add something more complicated
   // to check for collision with other tetrominos.
@@ -58,44 +56,53 @@ void TetrisGame::decideAction(UserInput userInput) {
   // This is not 100% correct, because we need to be able
   // to define custom keycodes for rotation, but for now I'll
   // leave it like this for the testing purposes
+  std::vector<Point> previousLocation = currentTetromino->getCurrentLocation();
+  int previousAngle = currentTetromino->getTetrominoAngle();
+
+  removeTetrominoFromScreen();
+
+  // Save tetromino location before moving
+  // in case of collision
+
+  // angle breaks
+  
   if (userInput.isKeyA()) {
     currentTetromino->rotateLeft();
-    if (isColliding()) {
-      currentTetromino->rotateRight();
-    }
+    // if (isColliding()) {
+    //   currentTetromino->rotateRight();
+    // }
   } else if (userInput.isKeyS()) {
     currentTetromino->rotateRight();
-    if (isColliding()) {
-      currentTetromino->rotateLeft();
-    }
+    // if (isColliding()) {
+    //   currentTetromino->rotateLeft();
+    // }
   }
 
   if (userInput.isKeyLeft()) {
     currentTetromino->moveLeft();
-    if (isColliding()) {
-      currentTetromino->moveRight();
-    }
+    // if (isColliding()) {
+    //   currentTetromino->moveRight();
+    // }
 
   } else if (userInput.isKeyRight()) {
     currentTetromino->moveRight();
-    if (isColliding()) {
-      currentTetromino->moveLeft();
-    }
+    // if (isColliding()) {
+    //   currentTetromino->moveLeft();
+    // }
 
   } else if (userInput.isKeyDown()) {
     currentTetromino->moveDown();
-    if (isColliding()) {
-      currentTetromino->moveUp();
-    }
+    // if (isColliding()) {
+    //   currentTetromino->moveUp();
+    // }
   }
 
-  // For testing
-  // else if (userInput.isKeyUp()) {
-  //   currentTetromino->moveUp();
-  //   if (isColliding()) {
-  //     currentTetromino->moveDown();
-  //   }
-  // }
+  // Return Tetromino to previous location if there was a collision
+  if(isColliding())
+  {
+    currentTetromino->setCurrentLocation(previousLocation);
+    currentTetromino->setCurrentAngle(previousAngle);
+  }
 
   drawTetromino();
 }
