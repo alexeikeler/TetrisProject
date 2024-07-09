@@ -31,6 +31,9 @@ public:
   int getTetrominoSize() const override { return size_; }
   int getTetrominoAngle() const override { return currentAngle_; }
 
+  void setCurrentLocation(std::vector<Point> location) override;
+  void setCurrentAngle(int angle) override;
+
 private:
   // Color of the tetromino, later will be changed to a enum
   const int color_ = 0;

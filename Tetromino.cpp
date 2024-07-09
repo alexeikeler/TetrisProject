@@ -13,6 +13,17 @@ TetrominoI::TetrominoI() {
   }
 };
 
+
+void TetrominoI::setCurrentLocation(std::vector<Point> location)
+{
+  currentLocation_ = location;
+}
+
+void TetrominoI::setCurrentAngle(int angle)
+{
+  currentAngle_ = angle;
+}
+
 void TetrominoI::moveLeft() {
   for (auto &point : currentLocation_) {
     point.col -= 1;
