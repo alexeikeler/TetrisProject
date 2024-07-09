@@ -1,0 +1,26 @@
+Time: ~ 20 hours
+
+Most of the time was spent to figure out the behaviour of Tetromino (moving rotation, collision with walls).
+
+Also I tried to separate code logically based on the behaviour of the functions (computation of the coordinates in one part, drawing in another),
+but of course it's not 100% corrent and will be rewritten later.
+
+Currently the TetrisGameMain is also not 100% corrent, and overall
+the whole programm currently is just a test field for the behaviour of the TetrominoI.
+
+
+
+
+Here is couple of things that I'm currently not sure about:
+
+1. Despite we are writing different terminal managers in different files
+I want to keep abstract class for Tetromino in one file and all classes (for different shapes)
+in another file, because they are very similar to each other. So overall 3 files for the Tetromino figures:
+    
+    * AbstractTetromino.h
+    * Tetromino.h
+    * Tetromino.cpp
+
+2. I'm not sure if I need to write tests for functions like TetrisGame.play() or TetrisGame.drawBorders(),
+because they are trivial in a sence, that they are just drawing pixels. 
+Probably I'll end up creating another mock class to test that (like with TerminalManager).
