@@ -1,6 +1,7 @@
 // Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
 // Code snippets from the lectures where used
 
+#include "./MockTerminalManager.h"
 #include "./TetrisGame.h"
 #include "./AbstractTetromino.h"
 #include "./Point.h"
@@ -144,4 +145,24 @@ TEST(Tetromino_I_LeftRotation, TetrominoI) {
 
   // Avoid memory leaks!
   delete tetrI;
+}
+
+TEST(MockTerminalManagerWork, MockTerminalManager)
+{
+  MockTerminalManager mtm(10, 10);
+
+  ASSERT_EQ(10, mtm.numCols());
+  ASSERT_EQ(10, mtm.numRows());
+
+  ASSERT_TRUE(mtm.getDrawnPixels().empty());
+
+  mtm.drawPixel(3, 3, 0);
+  mtm.drawPixel(3, 5, 0);
+  mtm.drawPixel(5, 3, 0);
+  
+  ASSERT_TRUE(mtm.isPixelDrawn(3, 3));
+  ASSERT_TRUE(mtm.isPixelDrawn(5, 3));
+  ASSERT_TRUE(mtm.isPixelDrawn(3, 5));
+
+  ASSERT_FALSE(mtm.isPixelDrawn(9, 9));
 }
