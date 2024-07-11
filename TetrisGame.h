@@ -4,6 +4,7 @@
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
 #include <unordered_map>
+#include <set>
 
 enum class Collision {Roof, Wall, Block, Nothing, Surface};
 
@@ -61,8 +62,7 @@ private:
   
   // vector of highest points in columns
   // This should really be a set!
-  std::vector<Point> surface;
-
+  std::set<Point> surface;
 
 
   // To put our "game screen" in the middle

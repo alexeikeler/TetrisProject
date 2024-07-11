@@ -172,7 +172,7 @@ void TetrisGame::updateSurface()
   for(int j = offset_col; j < offset_col + cols_; j++)
   {
     // Temporary variable to store index i
-    int index = 0;
+    char index = 0;
     
     for(int i = offset_row; i < offset_row + rows_; i++)
     {
@@ -180,7 +180,6 @@ void TetrisGame::updateSurface()
         // non zero point in column and we can store it's index and go to the next column
         if(gameField[Point{i, j}])
         {
-          //surface.push_back(Point{i, j});
           index = i;
           break;
         }
@@ -190,20 +189,13 @@ void TetrisGame::updateSurface()
     // and we will set point from last row as the highest point in this column.
     if(index == 0)
     {
-      auto it = std::find(surface.begin(), surface.end(), Point{offset_row + rows_, j});
-      if(it == surface.end())
-      {
-        surface.push_back(Point{offset_row + rows_, j});
-      }
+      surface.insert(Point{offset_row + rows_, j});
+
     }
     // If index != 0 then column i have the highest point at (i, j)
     else
     {
-      auto it = std::find(surface.begin(), surface.end(), Point{index, j});
-      if(it == surface.end())
-      {
-        surface.push_back(Point{index, j});
-      }
+      surface.insert(Point{index, j});
     }
   }
 }
