@@ -5,7 +5,7 @@
 #include "./Tetromino.h"
 #include <unordered_map>
 
-enum class Collision {Roof, Wall, Floor, Block, Nothing};
+enum class Collision {Roof, Wall, Block, Nothing, Surface};
 
 class TetrisGame {
 public:
@@ -16,12 +16,8 @@ public:
   void drawNextTetromino();
   void drawGameField();
   
-  void placeTetromino();
-
   void play();
-  void decideAction(UserInput userInput);
-  Collision isColliding();
-  void drawTetromino();
+
 
   // Removing in this context means
   // drawing black pixels on top of the current coordinates
@@ -29,7 +25,24 @@ public:
   // before tetromino will change it's location,
   // which will result in "moving-like" behaviour
   // when combined with drawTetromino()
-  void removeTetrominoFromScreen();
+  void removeTetrominoFromScreen(std::vector<Point> location);
+  
+  // "Remove" point from SCREEN (paint it black).
+  void removePointFromScreen(Point point);
+
+  void drawTetromino();
+  // "Place" tetromino in gameField
+  void placeTetromino();
+  // Decide what to do with the current tetromino
+  void decideAction(UserInput userInput);  
+  // Check if tetromino colliding
+  Collision isColliding();
+  
+  // Method for finding and updating surface
+  void updateSurface();
+
+  // Remove lines
+  void reshapeGameField();
 
   // Generate random tetromino
   void generateTetromino();
@@ -45,6 +58,11 @@ private:
   // we will draw the picture on the screen.
   // int gameField[rows_][cols_];
   std::unordered_map<Point, bool> gameField;
+  
+  // vector of highest points in columns
+  // This should really be a set!
+  std::vector<Point> surface;
+
 
 
   // To put our "game screen" in the middle
@@ -76,4 +94,5 @@ private:
   char leftRotationKey = 's';
 
   char rightRotationKey = 'a';
+
 };
