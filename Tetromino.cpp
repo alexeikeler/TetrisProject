@@ -9,7 +9,7 @@
 TetrominoI::TetrominoI() {
   // Create an "I" shape
   for (int i = 0; i < size_; i++) {
-    currentLocation_.push_back(Point{startRow_ + i, startCol_});
+    currentLocation_.push_back(Point{startRow_ + i, startCol_, color_});
   }
 };
 

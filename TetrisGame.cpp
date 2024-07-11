@@ -23,7 +23,7 @@ TetrisGame::TetrisGame(TerminalManager *tm) {
       
       for(int j = offset_col; j < offset_col + cols_; j++)
       { 
-        gameField[Point{i, j}] = false;
+        gameField[Point{i, j, NamedColors::BLACK}] = false;
       }
     }
 }
@@ -79,7 +79,7 @@ void TetrisGame::reshapeGameField()
 
     for(int j = offset_col + 1; j < offset_col + cols_; j++)
     {
-      acc += gameField[Point{i, j}];
+      acc += gameField[Point{i, j, NamedColors::BLACK}];
     }
     
     // If this holds, then line is full and we need to remove it
@@ -106,12 +106,14 @@ void TetrisGame::reshapeGameField()
     // Remove point everywhere
     for(int j = offset_col + 1; j < offset_col + cols_; j++)
     {
-      Point pointToRemove = Point{row, j};
+      Point pointToRemove = Point{row, j, NamedColors::BLACK};
+
       auto it = std::find(surface.begin(), surface.end(), pointToRemove);
       if(it != surface.end())
       {
         surface.erase(it);
       }
+
       gameField[pointToRemove] = false;
       removePointFromScreen(pointToRemove);
 
@@ -143,7 +145,7 @@ void TetrisGame::reshapeGameField()
       for(int j = offset_col + 1; j < offset_col + cols_; j++)
       {
         
-        Point currentPoint = Point{i, j};
+        Point currentPoint = Point{i, j, NamedColors::BLACK};
         // If point is drawn 
         if(gameField[currentPoint])
         {
@@ -167,6 +169,7 @@ void TetrisGame::reshapeGameField()
 
           // Move point one row down
           currentPoint.row += 1;
+          currentPoint.color = currentTetromino->getTetrominoColor();
 
           // Put point with new coordinates back in surface set. This will provide correct
           // collision
@@ -177,7 +180,7 @@ void TetrisGame::reshapeGameField()
 
           // Put new on the screen and add it to the "logical screen".
           gameField[currentPoint] = true;
-          tm_->drawPixel(currentPoint.row, currentPoint.col, 0);
+          tm_->drawPixel(currentPoint.row, currentPoint.col, (int)currentPoint.color);
         }
 
         flag = false;
@@ -204,7 +207,7 @@ void TetrisGame::updateSurface()
     {
         // If there exists (Point{i, j} = true) then we found our first
         // non zero point in column and we can store it's index and go to the next column
-        if(gameField[Point{i, j}])
+        if(gameField[Point{i, j, NamedColors::BLACK}])
         {
           index = i;
           break;
@@ -215,19 +218,19 @@ void TetrisGame::updateSurface()
     // and we will set point from last row as the highest point in this column.
     if(index == 0)
     {
-      surface.insert(Point{offset_row + rows_, j});
+      surface.insert(Point{offset_row + rows_, j, NamedColors::BLACK});
 
     }
     // If index != 0 then column i have the highest point at (i, j)
     else
     {
-      surface.insert(Point{index, j});
+      surface.insert(Point{index, j, NamedColors::BLACK});
     }
   }
 }
 
 
-Collision TetrisGame::isColliding() {
+Collision TetrisGame::isColliding(bool downPressed) {
 
   for(auto point : currentTetromino->getCurrentLocation())
   {
@@ -236,7 +239,7 @@ Collision TetrisGame::isColliding() {
       tm_->drawString(20, 20, 2, "Collision: W");
       return Collision::Wall;
     }
-    else if(std::find(surface.begin(), surface.end(), point) != surface.end())
+    else if((std::find(surface.begin(), surface.end(), point) != surface.end()) && downPressed)
     {
 
       tm_->drawString(20, 20, 2, "Collision: S");
@@ -272,7 +275,6 @@ void TetrisGame::decideAction(UserInput userInput) {
 
   // Save tetromino location before moving
   // in case of collision
-
   std::vector<Point> previousLocation = currentTetromino->getCurrentLocation();
   int previousAngle = currentTetromino->getCurrentAngle();
 
@@ -301,17 +303,19 @@ void TetrisGame::decideAction(UserInput userInput) {
   }
 
   // Return Tetromino to previous location if there is a collision
-  
-  // Not quite accurate behaviour, because we actually need to press
-  // one more time and acually colide, then the new tetromino will spawn
-  
-  // Falling should fix that however
-
-  // Currently checking only floor, we should of course also check
-  // other blocks! And there should be a small time gap between collsion,
-  // which is propbably also will be achived with the falling speed
-
-  Collision collision = isColliding();
+  //
+  // To decide correct collision type we need additional information,
+  // namely if isKeyDown() true. This helps to avoid situations like this:
+  //   4
+  //   3
+  //   2 *
+  //   1 *
+  //     *
+  // ____*______
+  // (1234 is current figure) If we press -> then the 2 will collide with
+  // current "surface" (see .h for exact information about surface points) point,
+  // which will result in wrong collision.
+  Collision collision = isColliding(userInput.isKeyDown());
   
   if(collision == Collision::Surface)
   {
@@ -347,7 +351,7 @@ void TetrisGame::decideAction(UserInput userInput) {
 
 void TetrisGame::removeTetrominoFromScreen(std::vector<Point> location) {
   for (auto point : location) {
-    tm_->drawPixel(point.row, point.col, 1);
+    tm_->drawPixel(point.row, point.col, (int)NamedColors::BLACK);
   }
 
   tm_->refresh();
@@ -361,7 +365,7 @@ void TetrisGame::removePointFromScreen(Point point)
 
 void TetrisGame::drawTetromino() {
   for (auto point : currentTetromino->getCurrentLocation()) {
-    tm_->drawPixel(point.row, point.col, currentTetromino->getTetrominoColor());
+    tm_->drawPixel(point.row, point.col, (int)currentTetromino->getTetrominoColor());
   }
 
   tm_->refresh();

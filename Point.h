@@ -6,19 +6,26 @@
 #pragma once
 #include <unordered_map>
 
+enum class NamedColors {
+    RED, 
+    BLACK, 
+    LIGHT_BLUE,
+};
+
 class Point {
 public:
-  int row;
-  int col;
+    int row;
+    int col;
+    NamedColors color;
+  
+    bool operator==(const Point &other) const{
+        return row == other.row && col == other.col;
+    }
 
-  bool operator==(const Point &other) const{
-    return row == other.row && col == other.col;
-}
+    bool operator<(const Point &other) const{
+        return row < other.row || (row == other.row && col < other.col);
+    }
 
-
-bool operator<(const Point &other) const{
-    return row < other.row || (row == other.row && col < other.col);
-}
 };
 
 template <> class std::hash<Point>{

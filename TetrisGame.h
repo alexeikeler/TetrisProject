@@ -36,8 +36,9 @@ public:
   void placeTetromino();
   // Decide what to do with the current tetromino
   void decideAction(UserInput userInput);  
+  
   // Check if tetromino colliding
-  Collision isColliding();
+  Collision isColliding(bool downPressed);
   
   // Method for finding and updating surface
   void updateSurface();

@@ -27,7 +27,7 @@ public:
   void rotateRight() override;
 
   std::vector<Point> getCurrentLocation() override { return currentLocation_; }
-  int getTetrominoColor() const override { return color_; }
+  NamedColors getTetrominoColor() const override { return color_; }
   int getTetrominoSize() const override { return size_; }
   int getCurrentAngle() const override { return currentAngle_; }
 
@@ -36,7 +36,9 @@ public:
 
 private:
   // Color of the tetromino, later will be changed to a enum
-  const int color_ = 0;
+  //const int color_ = 0;
+
+  NamedColors color_ = NamedColors::RED;
 
   // For the start position of the tetromino
   // (temporary)
