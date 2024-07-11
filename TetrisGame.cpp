@@ -97,11 +97,12 @@ void TetrisGame::reshapeGameField()
     return;
   }
 
+  int t = 1;
   // Remove all points from collected rows 
   for(int row : rowsToRemove)
   {
-    tm_->drawString(1, 40, 2, ("To remove: " + std::to_string(row)).c_str());
-
+    tm_->drawString(t, 40, 2, ("To remove: " + std::to_string(row)).c_str());
+    t+=1;
     // Remove point everywhere
     for(int j = offset_col + 1; j < offset_col + cols_; j++)
     {
@@ -118,46 +119,71 @@ void TetrisGame::reshapeGameField()
     }
   }
 
-  int tempR = 0;
-  int tempC = 2;
-  for(auto point : surface)
-  {
-    tm_->drawString(tempR, tempC, 2, ("(" + std::to_string(point.row) + ", " + std::to_string(point.col) + ") ").c_str());
-    tempR += 1;
-
-    if(tempR % 30 == 0)
-    {
-      tempR = 0;
-      tempC += 5;
-    }
-
-  }
-
-  // // Move down all points above the deleted line
-  // for(int row : rowsToRemove)
+  // int tempR = 0;
+  // int tempC = 2;
+  // for(auto point : surface)
   // {
-  //   for(int i = row + 1; i < offset_row + rows_; i++)
+  //   tm_->drawString(tempR, tempC, 2, ("(" + std::to_string(point.row) + ", " + std::to_string(point.col) + ") ").c_str());
+  //   tempR += 1;
+
+  //   if(tempR % 30 == 0)
   //   {
-  //     for(int j = offset_col + 1; j < offset_col + cols_; j++)
-  //     {
-
-  //       Point currentPoint = Point{i, j};
-  //       if(gameField[currentPoint])
-  //       {
-  //         gameField[currentPoint] = false;
-  //         removePointFromScreen(currentPoint);
-
-  //         // Move down by 1 block
-  //         currentPoint.row += 1;
-  //         gameField[currentPoint] = true;
-          
-  //         tm_->drawPixel(currentPoint.row, currentPoint.col, 0);
-  //       }
-  //     }
+  //     tempR = 0;
+  //     tempC += 5;
   //   }
   // }
 
+  bool flag = false;
 
+  //Now we need to move all drawn the points that are above the lines to be deleted
+  for(int row : rowsToRemove)
+  {
+    for(int i = row; i > offset_row; i--)
+    {
+      for(int j = offset_col + 1; j < offset_col + cols_; j++)
+      {
+        
+        Point currentPoint = Point{i, j};
+        // If point is drawn 
+        if(gameField[currentPoint])
+        {
+          // Set it to false
+          gameField[currentPoint] = false;
+          // Immitates "falling"
+          usleep(70'000);
+
+          // Remove current point from screen
+          removePointFromScreen(currentPoint);
+          
+          // Remove current point from surface set. We need to do this
+          // to avoid false collisions. We also need flag variable to know for sure,
+          // that we have deleted the point.
+          auto it = std::find(surface.begin(), surface.end(), currentPoint);
+          if(it != surface.end())
+          {
+            flag = true;
+            surface.erase(it);
+          }
+
+          // Move point one row down
+          currentPoint.row += 1;
+
+          // Put point with new coordinates back in surface set. This will provide correct
+          // collision
+          if(flag)
+          {
+            surface.insert(currentPoint);
+          }
+
+          // Put new on the screen and add it to the "logical screen".
+          gameField[currentPoint] = true;
+          tm_->drawPixel(currentPoint.row, currentPoint.col, 0);
+        }
+
+        flag = false;
+      }
+    }
+  }
 
 }
 
@@ -207,18 +233,25 @@ Collision TetrisGame::isColliding() {
   {
     if(point.col >= (offset_col + cols_) || point.col <= offset_col)
     {
-        return Collision::Wall;
+      tm_->drawString(20, 20, 2, "Collision: W");
+      return Collision::Wall;
     }
     else if(std::find(surface.begin(), surface.end(), point) != surface.end())
     {
+
+      tm_->drawString(20, 20, 2, "Collision: S");
       return Collision::Surface;
     }
     else if(point.row <= offset_row)
     {
+
+      tm_->drawString(20, 20, 2, "Collision: R");
       return Collision::Roof;
     }
     else if(gameField[point])
     {
+
+      tm_->drawString(20, 20, 2, "Collision: B");
       return Collision::Block;
     }
   }
@@ -302,7 +335,7 @@ void TetrisGame::decideAction(UserInput userInput) {
     return;
   }
 
-  else if(collision == Collision::Wall || collision == Collision::Block)
+  else if(collision == Collision::Wall || collision == Collision::Block || collision == Collision::Roof)
   {
     currentTetromino->setCurrentLocation(previousLocation);
     currentTetromino->setCurrentAngle(previousAngle);
