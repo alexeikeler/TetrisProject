@@ -14,12 +14,15 @@ int main() {
       std::pair(Color(0.0, 0.0, 0.0), Color(0.0, 0.0, 0.0));
   std::pair BordersColorPair =
       std::pair(Color(0, 0.522, 1), Color(0.0, 0.0, 0.0));
+  std::pair TetrominoTColorPair = 
+      std::pair(Color(0.153, 0.659, 0.047), Color(0.0, 0.0, 0.0));
 
   std::vector<std::pair<Color, Color>> colorVector;
 
   colorVector.push_back(MainColorPair);
   colorVector.push_back(BlackColorPair);
   colorVector.push_back(BordersColorPair);
+  colorVector.push_back(TetrominoTColorPair);
 
   TerminalManager *tm = new TerminalManager(colorVector);
   TetrisGame game(tm);

@@ -1,8 +1,7 @@
 // Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
 // Code snippets from the lectures where used
 
-// Simple class to represent a point on a screen
-// with row, col coordinates
+
 #pragma once
 #include <unordered_map>
 
@@ -13,8 +12,11 @@ enum class NamedColors {
     RED, 
     BLACK, 
     LIGHT_BLUE,
+    TETROMINO_T
 };
 
+// Simple class to represent a point on a screen
+// with row, col coordinates
 class Point {
 public:
     int row;

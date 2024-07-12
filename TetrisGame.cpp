@@ -36,8 +36,8 @@ void TetrisGame::play() {
   while(true)
   {
     // Create current tetromino
-    AbstractTetromino *tetrI = new TetrominoI();
-    currentTetromino = tetrI;
+    NewAbstractTetromino *tetr = new TetrominoT();
+    currentTetromino = tetr;
     drawTetromino();
 
     // until it's alive (i.e not collided with other block or floor)
@@ -54,7 +54,7 @@ void TetrisGame::play() {
 
     // Avoid memory leaks
     delete currentTetromino;
-    delete tetrI;
+    delete tetr;
 
     // Check for filled line on game screen and remove them
     // according to the rules of the game
@@ -234,7 +234,7 @@ Collision TetrisGame::isColliding(
   bool downPressed,  bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation
   ) {
 
-
+  
   // currentLocation is different from previousLocation because we have
   // performed moving by this point
   std::vector<Point> currentLocation = currentTetromino->getCurrentLocation();
@@ -244,7 +244,8 @@ Collision TetrisGame::isColliding(
   // to avoid rotation "through" points. In other words:
   // we don't want to perform rotation if something is on the way.
   // (see erfahrungen.pdf (collision for rotation) for more details)
-    //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  // Tetromino I behaves strange 
   if(leftRotaion || rightRotation)
   {
     for(int i = 0; i < currentTetromino->getTetrominoSize(); i++)
@@ -412,7 +413,7 @@ Collision TetrisGame::isColliding(
     }  
 
   }
-
+  
   //-----------------------------------------------------------------------------------------
 
   // Check if there is a collision after changing the coordinates
@@ -468,11 +469,13 @@ void TetrisGame::decideAction(UserInput userInput) {
   int previousAngle = currentTetromino->getCurrentAngle();
 
   if (userInput.isKeyA()) {
-    currentTetromino->rotateLeft();
+    currentTetromino->rotate(true);
+    // currentTetromino->rotateLeft();
   }
 
    else if (userInput.isKeyS()) {
-    currentTetromino->rotateRight();
+    //currentTetromino->rotateRight();
+    currentTetromino->rotate(false);
   }
 
   if (userInput.isKeyLeft()) {
@@ -504,17 +507,15 @@ void TetrisGame::decideAction(UserInput userInput) {
   // (1234 is current figure) If we press -> then the 2 will collide with
   // current "surface" (see .h for exact information about surface points) point,
   // which will result in wrong collision.
-  tm_->drawString(15, 2, 2, "B");
 
   Collision collision = isColliding(
     userInput.isKeyDown(), 
     userInput.isKeyA(), 
     userInput.isKeyS(), 
     previousLocation);
-  tm_->drawString(16, 2, 2, "A");
+
   
-  tm_->drawString(15, 2, 1 ," ");
-  tm_->drawString(16, 2, 1 ," ");
+  tm_->drawString(15, 2, 0 , ("Angle: " + std::to_string(currentTetromino->getCurrentAngle()) + "       ").c_str());
   
 
   if(collision == Collision::Surface)

@@ -34,3 +34,42 @@ public:
   virtual int getTetrominoSize() const = 0;
   virtual int getCurrentAngle() const = 0;
 };
+
+class NewAbstractTetromino{
+  public:
+    
+    virtual ~NewAbstractTetromino() = default;
+
+    void moveLeft();
+    void moveRight();
+    void moveDown();
+    void moveUp();
+    void rotate(bool left);
+    // rotationLeft
+    // rotationRight
+
+    // Getters
+    std::vector<Point> getCurrentLocation() {return currentLocation_;}
+    NamedColors getTetrominoColor() {return color_;}
+    int getTetrominoSize() {return size_;}
+    int getCurrentAngle() {return currentAngle_;}
+
+    // Setters
+    void setCurrentLocation(std::vector<Point> location) {currentLocation_ = location;}
+    void setCurrentAngle(int angle) {currentAngle_ = angle;}
+
+
+
+  protected:
+    // Each tetromino should define these separetly
+    NamedColors color_;
+    int startRow_;
+    int startCol_;
+    int centerIndex;
+    //
+
+    std::vector<Point> currentLocation_;
+    const int size_ = 4;
+    int currentAngle_ = 0;  
+    double rotation_angle = 90.0 * (M_PI / 180);
+};

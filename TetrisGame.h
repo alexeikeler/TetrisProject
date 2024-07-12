@@ -52,8 +52,8 @@ public:
 private:
   TerminalManager *tm_;
 
-  static const int rows_ = 20;
-  static const int cols_ = 10;
+  static const int rows_ = 21;
+  static const int cols_ = 11;
 
   // Logical game "screen" where all blocks
   // will be stored. Based on values of this array
@@ -76,7 +76,7 @@ private:
   const int borderColor = 1;
 
   // Current tetromino which will be displayed on the screen
-  AbstractTetromino *currentTetromino;
+  NewAbstractTetromino *currentTetromino;
 
   // To store current game scrore
   int currentScore = 0;

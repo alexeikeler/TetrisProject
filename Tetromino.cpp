@@ -6,6 +6,22 @@
 #include <iostream>
 #include <string>
 
+// ------------------------------------------------------------------------
+TetrominoT::TetrominoT()
+{
+  color_ = NamedColors::TETROMINO_T;
+  startRow_ = 15;
+  startCol_ = 45;
+  
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_ + 1, color_});
+  currentLocation_.push_back(Point{startRow_ + 1, startCol_ + 1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_ + 2, color_ });
+  centerIndex = 1;
+
+}
+
+// ------------------------------------------------------------------------
 TetrominoI::TetrominoI() {
   // Create an "I" shape
   for (int i = 0; i < size_; i++) {

@@ -71,6 +71,12 @@ private:
   int currentAngle_ = 90;
 };
 
+class TetrominoT : public NewAbstractTetromino{
+  public:
+    TetrominoT();
+    ~TetrominoT() = default;  
+};
+
 // // Class that represents following tetromino:
 // //      _
 // //     | |
