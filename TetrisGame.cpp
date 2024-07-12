@@ -229,9 +229,194 @@ void TetrisGame::updateSurface()
   }
 }
 
+ 
+Collision TetrisGame::isColliding(
+  bool downPressed,  bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation
+  ) {
 
-Collision TetrisGame::isColliding(bool downPressed) {
 
+  // currentLocation is different from previousLocation because we have
+  // performed moving by this point
+  std::vector<Point> currentLocation = currentTetromino->getCurrentLocation();
+
+  // If tetromino is being rotated
+  // we need to check left and right sides (depends on rotation)
+  // to avoid rotation "through" points. In other words:
+  // we don't want to perform rotation if something is on the way.
+  // (see erfahrungen.pdf (collision for rotation) for more details)
+    //-----------------------------------------------------------------------------------------
+  if(leftRotaion || rightRotation)
+  {
+    for(int i = 0; i < currentTetromino->getTetrominoSize(); i++)
+    {
+      Point previousPoint = previousLocation[i];
+      Point currentPoint =  currentLocation[i];
+      
+      int y;
+      int x;
+      int distRow;
+      int distCol;
+      
+      // Case 1
+      if(currentPoint.row <= previousPoint.row && currentPoint.col >= previousPoint.col)
+      {
+        y = 1;
+        x = 1;
+        distRow = previousPoint.row - currentPoint.row;
+        distCol = currentPoint.col - previousPoint.col;
+
+        if(distRow != 0)
+        {
+          // Move previvousPoint to the same y level
+          while(y != distRow)
+          {
+            // Decreasing row means putting point higher
+            previousPoint.row -= 1;
+            // If in the process of rotation, we came across a block ---> collision
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            y += 1;
+          }
+
+        }
+
+        // Here is "<" instead of "!=" because we don't want to
+        // bump into currentPoint
+        if(distCol != 0)
+        {
+          while(x < distCol)
+          {
+            previousPoint.col += 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            x += 1;
+          }
+        }
+
+      }
+
+      // Case 2
+      else if(currentPoint.row <= previousPoint.row && currentPoint.col <= previousPoint.col)
+      {
+        y = 1;
+        x = 1;
+        distRow = previousPoint.row - currentPoint.row;
+        distCol = previousPoint.col - currentPoint.col;
+
+        if(distRow != 0)
+        {
+          // Move previvousPoint to the same y level
+          while(y != distRow)
+          {
+            // Decreasing row means putting point higher
+            previousPoint.row -= 1;
+            // If in the process of rotation, we came across a block ---> collision
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            y += 1;
+          }
+
+        }      
+
+        if(distCol != 0)
+        {
+          while(x < distCol)
+          {
+            previousPoint.col -= 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            x += 1;
+          }
+        
+        }
+      }
+
+      // Case 3
+      else if(previousPoint.row <= currentPoint.row && previousPoint.col >= currentPoint.col)
+      {
+        y = 1;
+        x = 1;
+        distRow = currentPoint.row - previousPoint.row;
+        distCol = previousPoint.col - currentPoint.col;
+
+        if(distCol != 0)
+        {
+          while(x != (-distCol))
+          {
+            previousPoint.col -= 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            x -= 1;
+          }
+
+        }
+        if(distRow != 0)
+        {
+          while(y < distRow)
+          {
+            previousPoint.row += 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+
+            y += 1;
+          }
+        }
+      }
+
+      else if(previousPoint.row <= currentPoint.row && previousPoint.col <= currentPoint.col)
+      {
+        y = 1;
+        x = 1;
+        distRow = currentPoint.row - previousPoint.row;
+        distCol = currentPoint.col - previousPoint.col;
+
+        if(distCol != 0)
+        {
+          while(x != distCol)
+          {
+            previousPoint.col += 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            x += 1;
+          }
+        }
+
+        if(distRow != 0)
+        {
+          while(y < distRow)
+          {
+            previousPoint.row -= 1;
+            if(gameField[previousPoint])
+            {
+              return Collision::Block;
+            }
+            y -= 1;
+          }
+        }
+      }
+
+    }  
+
+  }
+
+  //-----------------------------------------------------------------------------------------
+
+  // Check if there is a collision after changing the coordinates
+  // of the currentTetromino
   for(auto point : currentTetromino->getCurrentLocation())
   {
     if(point.col >= (offset_col + cols_) || point.col <= offset_col)
@@ -256,6 +441,10 @@ Collision TetrisGame::isColliding(bool downPressed) {
 
       tm_->drawString(20, 20, 2, "Collision: B");
       return Collision::Block;
+    }
+    else if(point.row >= offset_row + rows_)
+    {
+      return Collision::Floor;
     }
   }
 
@@ -315,8 +504,19 @@ void TetrisGame::decideAction(UserInput userInput) {
   // (1234 is current figure) If we press -> then the 2 will collide with
   // current "surface" (see .h for exact information about surface points) point,
   // which will result in wrong collision.
-  Collision collision = isColliding(userInput.isKeyDown());
+  tm_->drawString(15, 2, 2, "B");
+
+  Collision collision = isColliding(
+    userInput.isKeyDown(), 
+    userInput.isKeyA(), 
+    userInput.isKeyS(), 
+    previousLocation);
+  tm_->drawString(16, 2, 2, "A");
   
+  tm_->drawString(15, 2, 1 ," ");
+  tm_->drawString(16, 2, 1 ," ");
+  
+
   if(collision == Collision::Surface)
   {
 

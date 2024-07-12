@@ -6,6 +6,9 @@
 #pragma once
 #include <unordered_map>
 
+// Plays role of a "named index" for vector of colors.
+// Oder is important, because we want to use correct 
+// colors from the vector.
 enum class NamedColors {
     RED, 
     BLACK, 

@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <set>
 
-enum class Collision {Roof, Wall, Block, Nothing, Surface};
+enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor};
 
 class TetrisGame {
 public:
@@ -38,7 +38,7 @@ public:
   void decideAction(UserInput userInput);  
   
   // Check if tetromino colliding
-  Collision isColliding(bool downPressed);
+  Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
   
   // Method for finding and updating surface
   void updateSurface();
