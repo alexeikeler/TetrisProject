@@ -35,7 +35,7 @@ void NewAbstractTetromino::moveUp()
 
 void NewAbstractTetromino::rotate(bool left)
 {
-    // Remember to shift tetromino 
+    // Remember to shift tetrominos 
     Point center = currentLocation_[centerIndex];
     int negate;
   
@@ -66,8 +66,4 @@ void NewAbstractTetromino::rotate(bool left)
         currentAngle_ += 360;
     }
     
-    // if(currentAngle_  == -360 || currentAngle_ == 360)
-    // {
-    //     currentAngle_ = 0;
-    // }
 }   

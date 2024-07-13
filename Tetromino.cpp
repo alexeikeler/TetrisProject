@@ -20,89 +20,89 @@ TetrominoT::TetrominoT()
   centerIndex = 1;
 
 }
-
 // ------------------------------------------------------------------------
-TetrominoI::TetrominoI() {
-  // Create an "I" shape
-  for (int i = 0; i < size_; i++) {
-    currentLocation_.push_back(Point{startRow_ + i, startCol_, color_});
-  }
-};
-
-
-void TetrominoI::setCurrentLocation(std::vector<Point> location)
+TetrominoL::TetrominoL()
 {
-  currentLocation_ = location;
-}
+  color_ = NamedColors::TETROMINO_L;
+  startRow_ = 15;
+  startCol_ = 45;
+  
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_ + 1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_ + 2, color_});
+  currentLocation_.push_back(Point{startRow_ + 1, startCol_ + 2, color_});
+  
+  centerIndex = 1;
 
-void TetrominoI::setCurrentAngle(int angle)
+}
+// ------------------------------------------------------------------------
+TetrominoJ::TetrominoJ()
 {
-  currentAngle_ = angle;
+  color_ = NamedColors::TETROMINO_J;
+  startRow_ = 15;
+  startCol_ = 45;
+  
+  currentLocation_.push_back(Point{startRow_ + 1, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
+    
+  centerIndex = 2;
+}
+// ------------------------------------------------------------------------
+TetrominoO::TetrominoO()
+{
+  color_ = NamedColors::TETROMINO_O;
+  startRow_ = 15;
+  startCol_ = 45;
+
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_+1, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_+1, startCol_+1, color_});
+  
+  // We don't need to rotate the cube, hence we don't need centerIndex
 }
 
-void TetrominoI::moveLeft() {
-  for (auto &point : currentLocation_) {
-    point.col -= 1;
-  }
+// We don't nned to rotate the cube
+void TetrominoO::rotate([[maybe_unused]] bool left)
+{
+  return;
+}
+// ------------------------------------------------------------------------
+
+TetrominoI::TetrominoI()
+{
+  color_ = NamedColors::TETROMINO_I;
+  startRow_ = 15;
+  startCol_ = 44;
+  
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+3, color_});
+
+  centerIndex = 2;
+
 }
 
-void TetrominoI::moveRight() {
-  for (auto &point : currentLocation_) {
-    point.col += 1;
-  }
-}
-
-void TetrominoI::moveDown() {
-  for (auto &point : currentLocation_) {
-    point.row += 1;
-  }
-}
-
-void TetrominoI::moveUp() {
-  for (auto &point : currentLocation_) {
-    point.row -= 1;
-  }
-}
-
-// TODO: Maybe some sort of linear transformation as a rotation?
-// (i.e. multiply each Point with some sort of rotation matrix?)
-
-void TetrominoI::rotateRight() {
-  switch (currentAngle_) {
-  // From ---- to I
-  case 0:
-    currentLocation_[0].row -= 2;
-    currentLocation_[0].col += 2;
-
-    // Move second to last to the top - 1
-    currentLocation_[1].row -= 1;
-    currentLocation_[1].col += 1;
-
-    // Move second to bottom
-    currentLocation_[3].row += 1;
-    currentLocation_[3].col -= 1;
-
-    currentAngle_ += 90;
-
-    break;
-
-  // From I to cube
-  case 90:
-    // Rotate tetromino to make it look like cube
-
+// We need to modify standart rotation to be able to fold and unfold
+// this tetromino.
+void TetrominoI::rotate(bool left)
+{
+  // I to cube
+  if(currentAngle_ == 90 && !left)
+  {
     currentLocation_[0].col -= 1;
     currentLocation_[0].row += 1;
     currentLocation_[2].col -= 1;
     currentLocation_[3].row -= 1;
-
     currentAngle_ += 90;
-    break;
+  }
+  else if(currentAngle_ == 180 && !left)
+  {
 
-  // From cube to ----
-  case 180:
-
-    // Maybe simpler ?
-
+    // cube to ____
     currentLocation_[2].col += 2;
     currentLocation_[2].row -= 1;
     currentLocation_[3].col += 2;
@@ -119,16 +119,12 @@ void TetrominoI::rotateRight() {
       currentLocation_[i].col -= 1;
       currentLocation_[i].row += 1;
     }
-
-    // now we have desired shape
     currentAngle_ = 0;
   }
-}
+  else if(currentAngle_ == 0 && left)
+  {
 
-void TetrominoI::rotateLeft() {
-  switch (currentAngle_) {
-  // From ---- to cube
-  case 0:
+    //   // From ---- to cube
     currentLocation_[0].row -= 1;
     currentLocation_[0].col += 1;
 
@@ -139,32 +135,42 @@ void TetrominoI::rotateLeft() {
 
     currentLocation_[3].col -= 1;
 
-    currentAngle_ = 180;
-    break;
-
-  // From I to ----
-  case 90:
-    currentLocation_[0].row += 2;
-    currentLocation_[0].col -= 2;
-
-    currentLocation_[1].row += 1;
-    currentLocation_[1].col -= 1;
-
-    currentLocation_[3].row -= 1;
-    currentLocation_[3].col += 1;
-
-    currentAngle_ -= 90;
-    break;
-
-  // From cube to I
-  case 180:
-    currentLocation_[0].row -= 1;
+    currentAngle_  = 180;
+  }
+  else if(currentAngle_ == 180 && left)
+  {
+    // From cube to I
     currentLocation_[0].col += 1;
-
+    currentLocation_[0].row -= 1;
     currentLocation_[2].col += 1;
-
     currentLocation_[3].row += 1;
     currentAngle_ -= 90;
-    break;
+  }
+  else
+  {
+    NewAbstractTetromino::rotate(left);
   }
 }
+// ------------------------------------------------------------------------
+
+TetrominoZ::TetrominoZ()
+{
+  color_ = NamedColors::TETROMINO_Z;
+  startRow_ = 15;
+  startCol_ = 45;
+
+  currentLocation_.push_back(Point{startRow_, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_+1, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_+1, startCol_+2, color_});
+
+  centerIndex = 2;
+  
+}
+
+void TetrominoZ::rotate(bool left)
+{
+  return;
+}
+
+// ------------------------------------------------------------------------

@@ -12,7 +12,13 @@ enum class NamedColors {
     RED, 
     BLACK, 
     LIGHT_BLUE,
-    TETROMINO_T
+    TETROMINO_T,
+    TETROMINO_L,
+    TETROMINO_J,
+    TETROMINO_O,
+    TETROMINO_I,
+    TETROMINO_Z,
+    TETROMINO_S
 };
 
 // Simple class to represent a point on a screen

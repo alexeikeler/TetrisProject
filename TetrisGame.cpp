@@ -36,7 +36,7 @@ void TetrisGame::play() {
   while(true)
   {
     // Create current tetromino
-    NewAbstractTetromino *tetr = new TetrominoT();
+    NewAbstractTetromino *tetr = new TetrominoZ();
     currentTetromino = tetr;
     drawTetromino();
 
