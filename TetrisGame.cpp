@@ -214,7 +214,6 @@ void TetrisGame::reshapeGameField()
   bool flag = false;
 
   //Now we need to move all drawn the points that are above the lines to be deleted
-  int p = 10;
 
   for(int row : rowsToRemove)
   {
@@ -227,10 +226,7 @@ void TetrisGame::reshapeGameField()
         // If point is drawn 
         if(gameField[currentPoint])
         {
-          
-          //TEST
-          tm_->drawString(p, 0, 0, ("Point: " + std::to_string(currentPoint.row) + ", " + std::to_string(currentPoint.col) + ") " + "Color: " + std::to_string((int)currentPoint.color)).c_str());
-          p+=1;
+          auto pointInGameField = gameField.find(currentPoint);
 
           // Set it to false
           gameField[currentPoint] = false;
@@ -252,8 +248,9 @@ void TetrisGame::reshapeGameField()
 
           // Move point one row down
           currentPoint.row += 1;
-          currentPoint.color = currentTetromino->getTetrominoColor();
-
+          
+          currentPoint.color = pointInGameField->first.color;
+          
           // Put point with new coordinates back in surface set. This will provide correct
           // collision
           if(flag)
@@ -539,8 +536,10 @@ void TetrisGame::placeTetromino()
 {
   for(auto point : currentTetromino->getCurrentLocation())
   {
-    gameField[point] = true;
-
+    // We can't just write gameField[point] = true, because we out new point
+    // can have new color.
+    gameField.erase(point);
+    gameField.insert(std::pair(point, true));
   }
 }
 
