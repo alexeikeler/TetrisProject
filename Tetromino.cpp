@@ -168,9 +168,89 @@ TetrominoZ::TetrominoZ()
   
 }
 
-void TetrominoZ::rotate(bool left)
+void TetrominoZ::rotate([[maybe_unused]] bool left)
 {
-  return;
+  // We have only two unique positions.
+  // Custom rotation needed becase Tetromizo S doesn't work
+  // 100% correct with natural rotation.
+
+  // Rotate by 90 degrees.
+
+  if(currentAngle_ == 0)
+  {
+    currentLocation_[0].row -= 1;
+    currentLocation_[0].col += 2;
+    
+    currentLocation_[1].col += 1;
+
+    currentLocation_[2].row -= 1;
+
+    currentLocation_[3].col -= 1;
+
+    currentAngle_ += 90;
+  }
+  
+  // Rotate by 90 degrees.
+  else if(currentAngle_ == 90)
+  {
+    currentLocation_[0].row += 1;
+    currentLocation_[0].col -= 2;
+    
+    currentLocation_[1].col -= 1;
+
+    currentLocation_[2].row += 1;
+
+    currentLocation_[3].col += 1;
+
+    currentAngle_ = 0;
+  }
 }
 
 // ------------------------------------------------------------------------
+
+TetrominoS::TetrominoS()
+{
+  color_ = NamedColors::TETROMINO_S;
+  startRow_ = 15;
+  startCol_ = 45;
+
+  currentLocation_.push_back(Point{startRow_ + 1, startCol_, color_});
+  currentLocation_.push_back(Point{startRow_ + 1, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
+  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
+  
+}
+
+void TetrominoS::rotate([[maybe_unused]] bool left)
+{
+  // We have only two unique positions.
+  // Custom rotation needed becase Tetromizo S doesn't work
+  // 100% correct with natural rotation.
+
+  // Rotate by 90 degrees.
+  if(currentAngle_ == 0)
+  {
+    currentLocation_[0].row -= 2;
+    currentLocation_[0].col += 1;
+
+    currentLocation_[1].row -= 1;
+    currentLocation_[2].col += 1;
+
+    currentLocation_[3].row += 1;
+    
+    currentAngle_ += 90;
+  }
+  // Rotate by 90 degrees.
+  else if(currentAngle_ == 90)
+  {
+    currentLocation_[0].row += 2;
+    currentLocation_[0].col -= 1;
+
+    currentLocation_[1].row += 1;
+    currentLocation_[2].col -= 1;
+
+    currentLocation_[3].row -= 1;
+
+    currentAngle_ = 0;
+  }
+}
