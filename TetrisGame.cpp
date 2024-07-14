@@ -8,7 +8,9 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-
+#include <random>
+#include <chrono>
+#include <stack>
 
 TetrisGame::TetrisGame(TerminalManager *tm) {
   tm_ = tm;
@@ -28,6 +30,82 @@ TetrisGame::TetrisGame(TerminalManager *tm) {
     }
 }
 
+int TetrisGame::generateRandomNumber(int a, int b)
+{
+  // Use current time as seed to get a new number each time
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  static std::default_random_engine generator (seed);
+  
+  // Create uniforme distribution of numbers from 0 to 6
+  std::uniform_int_distribution<int> distribution (a,b);
+  
+  // Return num in [0, 6] with p(num) = 1/7.
+  return distribution(generator);
+}
+
+
+void TetrisGame::generateCurrentAndNext(int a, int b)
+{
+  currentRandomNumber = generateRandomNumber(a, b);
+  nextRandomNumber = generateRandomNumber(a, b);
+  
+  // To avoid repeating tetrominos we check if
+  // current == next
+  // and if
+  // current == previous
+  while((currentRandomNumber == previousRandomNumber) || (currentRandomNumber == nextRandomNumber))
+  {
+    // Generate new number if currentRandomNumber == nextRandomNumber.
+    currentRandomNumber = generateRandomNumber(a, b);
+  }
+    
+  tm_->drawString(5, 40, 0, ("previousRandom: " + std::to_string(previousRandomNumber)).c_str());   
+  tm_->drawString(6, 40, 0, ("currentRandom: " + std::to_string(currentRandomNumber)).c_str());
+  tm_->drawString(7, 40, 0, ("nextRandom: " + std::to_string(nextRandomNumber)).c_str());
+  
+  // Add previous to store next, because we will need to compare it
+  // with next currentRandomNumber to avoid repeating tetrominos.
+  previousRandomNumber = nextRandomNumber;
+
+}
+
+
+NewAbstractTetromino* TetrisGame::chooseTetromino(int randomNumber)
+{
+  if(randomNumber == 0)
+  {
+    return new TetrominoI();
+  }
+  else if(randomNumber == 1)
+  {
+    return new TetrominoJ();
+  }
+  else if(randomNumber == 2)
+  {
+    return new TetrominoL();
+  }
+  else if(randomNumber == 3)
+  {
+    return new TetrominoO();
+  }
+  else if(randomNumber == 4)
+  {
+    return new TetrominoS();
+  }
+  else if(randomNumber == 5)
+  {
+    return new TetrominoZ();
+  }
+  else if(randomNumber == 6)
+  {
+    return new TetrominoT();
+  }
+
+  // Just to supress warning
+  return new TetrominoO();
+};
+
+
 void TetrisGame::play() {
 
   // later: smart pointer ?
@@ -36,29 +114,39 @@ void TetrisGame::play() {
   while(true)
   {
     // Create current tetromino
-    NewAbstractTetromino *tetr = new TetrominoZ();
-    currentTetromino = tetr;
-    drawTetromino();
 
-    // until it's alive (i.e not collided with other block or floor)
-    while (currentTetromino != nullptr) {
+    // Because we need to know next tetromino immideatly (to print it on the screen)
+    // we can generate two rundom numbers (r1 != r2) and use stack.
+    generateCurrentAndNext();
+    stack.push(nextRandomNumber);
+    stack.push(currentRandomNumber);
 
-      UserInput userInput = tm_->getUserInput();
-      // find new surface, to check for collision
-      decideAction(userInput);
-      // Small delay, so that tetromino will have enought time to
-      // be erased and drawn with new coordinates
-      // (without the delay it's flickering)
-      usleep(40'000);
+    // Until we havent used our two random Tetrominos:
+    while(!stack.empty())
+    {
+      NewAbstractTetromino *tetr = chooseTetromino(stack.top());
+      currentTetromino = tetr;
+      drawTetromino();
+
+      // until it's alive (i.e not collided)
+      while (currentTetromino != nullptr) {
+
+        UserInput userInput = tm_->getUserInput();
+        // find new surface, to check for collision
+        decideAction(userInput);
+        // Small delay, so that tetromino will have enought time to
+        // be erased and drawn with new coordinates
+        // (without the delay it's flickering)
+        usleep(40'000);
+      }
+
+      // Avoid memory leaks
+      delete currentTetromino;
+      delete tetr;
+      // Remove used number
+      stack.pop();
+
     }
-
-    // Avoid memory leaks
-    delete currentTetromino;
-    delete tetr;
-
-    // Check for filled line on game screen and remove them
-    // according to the rules of the game
-    // ...
 
   }
   
@@ -103,6 +191,7 @@ void TetrisGame::reshapeGameField()
   {
     tm_->drawString(t, 40, 2, ("To remove: " + std::to_string(row)).c_str());
     t+=1;
+
     // Remove point everywhere
     for(int j = offset_col + 1; j < offset_col + cols_; j++)
     {
@@ -121,34 +210,28 @@ void TetrisGame::reshapeGameField()
     }
   }
 
-  // int tempR = 0;
-  // int tempC = 2;
-  // for(auto point : surface)
-  // {
-  //   tm_->drawString(tempR, tempC, 2, ("(" + std::to_string(point.row) + ", " + std::to_string(point.col) + ") ").c_str());
-  //   tempR += 1;
-
-  //   if(tempR % 30 == 0)
-  //   {
-  //     tempR = 0;
-  //     tempC += 5;
-  //   }
-  // }
 
   bool flag = false;
 
   //Now we need to move all drawn the points that are above the lines to be deleted
+  int p = 10;
+
   for(int row : rowsToRemove)
   {
     for(int i = row; i > offset_row; i--)
     {
       for(int j = offset_col + 1; j < offset_col + cols_; j++)
       {
-        
-        Point currentPoint = Point{i, j, NamedColors::BLACK};
+        // Point currentPoint = Point{i, j, NamedColors::BLACK};
+        Point currentPoint = Point{i, j};
         // If point is drawn 
         if(gameField[currentPoint])
         {
+          
+          //TEST
+          tm_->drawString(p, 0, 0, ("Point: " + std::to_string(currentPoint.row) + ", " + std::to_string(currentPoint.col) + ") " + "Color: " + std::to_string((int)currentPoint.color)).c_str());
+          p+=1;
+
           // Set it to false
           gameField[currentPoint] = false;
           // Immitates "falling"
@@ -513,9 +596,6 @@ void TetrisGame::decideAction(UserInput userInput) {
     userInput.isKeyA(), 
     userInput.isKeyS(), 
     previousLocation);
-
-  
-  tm_->drawString(15, 2, 0 , ("Angle: " + std::to_string(currentTetromino->getCurrentAngle()) + "       ").c_str());
   
 
   if(collision == Collision::Surface)

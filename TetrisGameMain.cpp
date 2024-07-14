@@ -34,7 +34,6 @@ int main() {
   colorVector.push_back(MainColorPair);
   colorVector.push_back(BlackColorPair);
   colorVector.push_back(BordersColorPair);
-  
   colorVector.push_back(TetrominoTColorPair);
   colorVector.push_back(TetrominoLColorPair);
   colorVector.push_back(TetrominoJColorPair);

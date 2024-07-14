@@ -4,6 +4,7 @@
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
 #include <unordered_map>
+#include <stack>
 #include <set>
 
 enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor};
@@ -15,6 +16,7 @@ public:
 
   void drawScore();
   void drawNextTetromino();
+
   void drawGameField();
   
   void play();
@@ -47,10 +49,15 @@ public:
   void reshapeGameField();
 
   // Generate random tetromino
-  void generateTetromino();
+  void generateCurrentAndNext(int a = 0, int b = 6);
+  
+  int generateRandomNumber(int a, int b);
 
+  NewAbstractTetromino* chooseTetromino(const int randomNumber);
+  
 private:
   TerminalManager *tm_;
+  std::stack<int> stack;
 
   static const int rows_ = 21;
   static const int cols_ = 11;
@@ -62,7 +69,6 @@ private:
   std::unordered_map<Point, bool> gameField;
   
   // vector of highest points in columns
-  // This should really be a set!
   std::set<Point> surface;
 
 
@@ -81,8 +87,10 @@ private:
   // To store current game scrore
   int currentScore = 0;
 
-  // To show next tetromino based on char (I, J, L, O, T, Z, S)
-  char nextTetromino;
+  // To generate new tetrominos
+  int previousRandomNumber;
+  int currentRandomNumber;
+  int nextRandomNumber;
 
   // Falling speed (depends from currentLevel)
   float fallingSpeed;

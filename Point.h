@@ -36,6 +36,7 @@ public:
     bool operator<(const Point &other) const{
         return row < other.row || (row == other.row && col < other.col);
     }
+    
 
 };
 
