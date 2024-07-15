@@ -13,10 +13,7 @@ TetrominoT::TetrominoT()
   startRow_ = 15;
   startCol_ = 45;
   
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_ + 1, color_});
-  currentLocation_.push_back(Point{startRow_ + 1, startCol_ + 1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_ + 2, color_ });
+  TetrominoShape::createTShape(startRow_, startCol_, &currentLocation_, color_);
   centerIndex = 1;
 
 }
@@ -27,11 +24,7 @@ TetrominoL::TetrominoL()
   startRow_ = 15;
   startCol_ = 45;
   
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_ + 1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_ + 2, color_});
-  currentLocation_.push_back(Point{startRow_ + 1, startCol_ + 2, color_});
-  
+  TetrominoShape::createLShape(startRow_, startCol_, &currentLocation_, color_);
   centerIndex = 1;
 
 }
@@ -41,12 +34,9 @@ TetrominoJ::TetrominoJ()
   color_ = NamedColors::TETROMINO_J;
   startRow_ = 15;
   startCol_ = 45;
-  
-  currentLocation_.push_back(Point{startRow_ + 1, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
-    
+
+  TetrominoShape::createJShape(startRow_, startCol_, &currentLocation_, color_);
+
   centerIndex = 2;
 }
 // ------------------------------------------------------------------------
@@ -56,11 +46,8 @@ TetrominoO::TetrominoO()
   startRow_ = 15;
   startCol_ = 45;
 
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_+1, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_+1, startCol_+1, color_});
-  
+  TetrominoShape::createOShape(startRow_, startCol_, &currentLocation_, color_);
+
   // We don't need to rotate the cube, hence we don't need centerIndex
 }
 
@@ -77,10 +64,7 @@ TetrominoI::TetrominoI()
   startRow_ = 15;
   startCol_ = 44;
   
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+3, color_});
+  TetrominoShape::createIShape(startRow_, startCol_, &currentLocation_, color_);
 
   centerIndex = 2;
 
@@ -159,10 +143,7 @@ TetrominoZ::TetrominoZ()
   startRow_ = 15;
   startCol_ = 45;
 
-  currentLocation_.push_back(Point{startRow_, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_+1, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_+1, startCol_+2, color_});
+  TetrominoShape::createZShape(startRow_, startCol_, &currentLocation_, color_);
 
   centerIndex = 2;
   
@@ -214,10 +195,7 @@ TetrominoS::TetrominoS()
   startRow_ = 15;
   startCol_ = 45;
 
-  currentLocation_.push_back(Point{startRow_ + 1, startCol_, color_});
-  currentLocation_.push_back(Point{startRow_ + 1, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+1, color_});
-  currentLocation_.push_back(Point{startRow_, startCol_+2, color_});
+  TetrominoShape::createSShape(startRow_, startCol_, &currentLocation_, color_);
   
 }
 

@@ -29,6 +29,8 @@ int main() {
   std::pair TetrominoSColorPair = 
       std::pair(Color(0, 0.859, 0.655), Color(0.0, 0.0, 0.0));
 
+  std::pair WhileColorPair(Color(1, 1, 1), Color(0.0, 0.0, 0.0));
+
   std::vector<std::pair<Color, Color>> colorVector;
 
   colorVector.push_back(MainColorPair);
@@ -41,6 +43,7 @@ int main() {
   colorVector.push_back(TetrominoIColorPair);
   colorVector.push_back(TetrominoZColorPair);
   colorVector.push_back(TetrominoSColorPair);
+  colorVector.push_back(WhileColorPair);
   
 
   TerminalManager *tm = new TerminalManager(colorVector);

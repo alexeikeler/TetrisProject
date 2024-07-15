@@ -7,67 +7,65 @@
 #include <string>
 #include <vector>
 
-/*
 
+struct TetrominoShape{
+    
+    static void createTShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow + 1, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 2, color});
+    }
 
-// class TetrominoI : public AbstractTetromino {
-// public:
-//   TetrominoI();
-//   ~TetrominoI() = default;
+    static void createLShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 2, color});
+      container->push_back(Point{startRow + 1, startCol + 2, color});
+    }
 
-//   // See AbstractTetromino.h
-//   void moveLeft() override;
-//   void moveRight() override;
-//   void moveDown() override;
-//   void moveUp() override;
-//   void rotateLeft() override;
-//   void rotateRight() override;
+    static void createJShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow + 1, startCol, color});
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 2, color});
+    }
 
-//   std::vector<Point> getCurrentLocation() override { return currentLocation_; }
-//   NamedColors getTetrominoColor() const override { return color_; }
-//   int getTetrominoSize() const override { return size_; }
-//   int getCurrentAngle() const override { return currentAngle_; }
+    static void createOShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow + 1, startCol, color});
+      container->push_back(Point{startRow + 1, startCol + 1, color});
+    }
 
-//   void setCurrentLocation(std::vector<Point> location) override;
-//   void setCurrentAngle(int angle) override;
+    static void createIShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 2, color});
+      container->push_back(Point{startRow, startCol + 3, color});
+    }
 
-// private:
-//   // Color of the tetromino, later will be changed to a enum
-//   //const int color_ = 0;
+    static void createZShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow, startCol, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow + 1, startCol + 1, color});
+      container->push_back(Point{startRow + 1, startCol + 2, color});
+    }
 
-//   NamedColors color_ = NamedColors::RED;
-
-//   // For the start position of the tetromino
-//   // (temporary)
-//   const int startRow_ = 17;
-//   const int startCol_ = 45;
-
-//   // Current idea:
-//   // Represent tetromino as an
-//   // vector of Points
-//   std::vector<Point> currentLocation_;
-//   // Despite we are using vector, it's convinient to
-//   // use size_ variable to avoid magic numbers in code
-//   const int size_ = 4;
-
-//   // Current idea:
-//   // Represent state of tetramino (for the correct rotation)
-//   // as the angle
-//   //
-//   // Something to think about:
-//   // With this particular tetromino it's a bit more compicated
-//   // due to the fact that it will return to the starting shape
-//   // after 3 rotations whereas all other tetrominons need 4 rotations
-//   // (0 --> 90 --> 180 --> 270)
-//   //  ^                     |
-//   //  |---------------------|
-//   //
-//   // Current solution:
-//   // Start as usual: 0 --> 90 --> 180
-//   // but set currentAngle_ = 0 after 180
-//   int currentAngle_ = 90;
-// };
-*/
+    static void createSShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
+    {
+      container->push_back(Point{startRow + 1, startCol, color});
+      container->push_back(Point{startRow + 1, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 1, color});
+      container->push_back(Point{startRow, startCol + 2, color});
+    }
+};
 
 
 class TetrominoT : public NewAbstractTetromino{

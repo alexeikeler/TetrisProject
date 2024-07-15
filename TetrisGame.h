@@ -4,8 +4,9 @@
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
 #include <unordered_map>
-#include <stack>
+#include <deque>
 #include <set>
+#include <functional>
 
 enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor};
 
@@ -15,7 +16,10 @@ public:
   ~TetrisGame(){};
 
   void drawScore();
-  void drawNextTetromino();
+  void drawStatistics();
+  void updateStatistics(int tetrominoIndex);
+  void drawNextTetrominoText();
+  void drawNextTetromino(int tetrominoIndex);
 
   void drawGameField();
   
@@ -57,7 +61,7 @@ public:
   
 private:
   TerminalManager *tm_;
-  std::stack<int> stack;
+  std::deque<int> deque;
 
   static const int rows_ = 21;
   static const int cols_ = 11;
@@ -103,5 +107,49 @@ private:
   char leftRotationKey = 's';
 
   char rightRotationKey = 'a';
+
+  // Coordinates of the "Box" for the next tetromino
+  int nextTetrominoRowStart = 20;
+  int nextTetrominoRowEnd = 25;
+  
+  int nextTetrominoColStart = 54;
+  int nextTetrominoColEnd = 60;
+
+  // All tetromino shapes. We need them all at once
+  // to be able to draw next tetromino.
+  std::vector<std::vector<Point>> shapes;
+
+  // Statistics map. First integer is the integer code for concrete tetromino,
+  // second integer corresponds to the number of placed tetrominos.
+  std::unordered_map<int, int> statistics = {
+    {0, 0},
+    {1, 0},
+    {2, 0},
+    {3, 0},
+    {4, 0},
+    {5, 0},
+    {6, 0}
+  };
+
+
+  using shapeFunctions = std::function<void(int, int, std::vector<Point>*, NamedColors)>;
+  std::unordered_map<int, shapeFunctions> shapeMapper = {
+    {0, TetrominoShape::createIShape},
+    {1, TetrominoShape::createJShape},
+    {2, TetrominoShape::createLShape},
+    {3, TetrominoShape::createOShape},
+    {4, TetrominoShape::createSShape},
+    {5, TetrominoShape::createZShape},
+    {6, TetrominoShape::createTShape}
+  };
+  
+
+
+  //shapeMapper[0] = TetrominoShape::createIShape;
+  // Coordinates of the statistics
+  int statisticsRowStart = 13;
+  int statisticsColStart = 25;
+
+  int statisticsRowEnd = 34;
 
 };

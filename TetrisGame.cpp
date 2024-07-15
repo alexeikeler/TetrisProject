@@ -10,13 +10,15 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <stack>
+
 
 TetrisGame::TetrisGame(TerminalManager *tm) {
   tm_ = tm;
 
-  // draw the game field
+  // draw the game field, statistics and next
   drawGameField();
+  drawNextTetrominoText();
+  drawStatistics();
   updateSurface();
 
   // Fill logical game field
@@ -28,7 +30,39 @@ TetrisGame::TetrisGame(TerminalManager *tm) {
         gameField[Point{i, j, NamedColors::BLACK}] = false;
       }
     }
+
+  // TODO: Currently it's not optimal.
+  std::vector<Point> Ishape;
+  TetrominoShape::createIShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Ishape, NamedColors::TETROMINO_I);
+  shapes.push_back(Ishape);
+
+  std::vector<Point> Jshape;
+  TetrominoShape::createJShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Jshape, NamedColors::TETROMINO_J);
+  shapes.push_back(Jshape);
+  
+  std::vector<Point> Lshape;
+  TetrominoShape::createLShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Lshape, NamedColors::TETROMINO_L);
+  shapes.push_back(Lshape);
+  
+  std::vector<Point> Oshape;
+  TetrominoShape::createOShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 3, &Oshape, NamedColors::TETROMINO_O);
+  shapes.push_back(Oshape);
+  
+  std::vector<Point> Sshape;
+  TetrominoShape::createSShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Sshape, NamedColors::TETROMINO_S);
+  shapes.push_back(Sshape);
+  
+  std::vector<Point> Zshape;
+  TetrominoShape::createZShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Zshape, NamedColors::TETROMINO_Z);
+  shapes.push_back(Zshape);
+  
+  std::vector<Point> Tshape;
+  TetrominoShape::createTShape(nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &Tshape, NamedColors::TETROMINO_T);
+  shapes.push_back(Tshape);
+  
 }
+
+
 
 int TetrisGame::generateRandomNumber(int a, int b)
 {
@@ -106,25 +140,61 @@ NewAbstractTetromino* TetrisGame::chooseTetromino(int randomNumber)
 };
 
 
+void TetrisGame::drawNextTetromino(int tetrominoIndex)
+{
+  // Clear 4x4 box
+  for(int i = nextTetrominoRowStart + 1; i < nextTetrominoRowEnd; i++)
+  {
+    for(int j = nextTetrominoColStart + 1; j < nextTetrominoColEnd; j++)
+    {
+      removePointFromScreen(Point{i, j, NamedColors::BLACK});
+    }
+  } 
+
+  for(Point point : shapes[tetrominoIndex])
+  {
+    tm_->drawPixel(point.row, point.col, (int)point.color);
+  }
+}
+
 void TetrisGame::play() {
 
   // later: smart pointer ?
-
   // Main game loop
+  int temp;
+    
   while(true)
   {
-    // Create current tetromino
-
     // Because we need to know next tetromino immideatly (to print it on the screen)
-    // we can generate two rundom numbers (r1 != r2) and use stack.
-    generateCurrentAndNext();
-    stack.push(nextRandomNumber);
-    stack.push(currentRandomNumber);
+    // we need to generate two rundom numbers (r1 != r2) and use deque
+    // to code correct behaviour.
 
+    // Generate initial random numbers and put them at the back of the deque.
+    generateCurrentAndNext();
+    deque.push_back(currentRandomNumber);
+    deque.push_back(nextRandomNumber);
+    
     // Until we havent used our two random Tetrominos:
-    while(!stack.empty())
+    while(!deque.empty())
     {
-      NewAbstractTetromino *tetr = chooseTetromino(stack.top());
+      // Get first element of the deque and create current tetromino
+      temp = deque.front();
+      NewAbstractTetromino *tetr = chooseTetromino(deque.front());
+      
+      // Remove first element from the deque
+      deque.pop_front();
+
+      // Generate next random numbers and add them to the deque
+      generateCurrentAndNext();
+      deque.push_back(currentRandomNumber);
+      deque.push_back(nextRandomNumber);
+      
+      // Here we get the element that follows the elements from the line 178, 
+      // since we used deque.pop_front() (line 181). 
+      // Thus the resulting element is the following.
+      drawNextTetromino(deque.front());
+
+
       currentTetromino = tetr;
       drawTetromino();
 
@@ -140,12 +210,13 @@ void TetrisGame::play() {
         usleep(40'000);
       }
 
+      updateStatistics(temp);
+
       // Avoid memory leaks
+
       delete currentTetromino;
       delete tetr;
       // Remove used number
-      stack.pop();
-
     }
 
   }
@@ -222,7 +293,7 @@ void TetrisGame::reshapeGameField()
       for(int j = offset_col + 1; j < offset_col + cols_; j++)
       {
         // Point currentPoint = Point{i, j, NamedColors::BLACK};
-        Point currentPoint = Point{i, j};
+        Point currentPoint = Point{i, j, NamedColors::BLACK};
         // If point is drawn 
         if(gameField[currentPoint])
         {
@@ -231,7 +302,7 @@ void TetrisGame::reshapeGameField()
           // Set it to false
           gameField[currentPoint] = false;
           // Immitates "falling"
-          usleep(70'000);
+          usleep(60'000);
 
           // Remove current point from screen
           removePointFromScreen(currentPoint);
@@ -333,18 +404,14 @@ Collision TetrisGame::isColliding(
       Point previousPoint = previousLocation[i];
       Point currentPoint =  currentLocation[i];
       
-      int y;
-      int x;
-      int distRow;
-      int distCol;
+      int y = 1;
+      int x = 1;
+      int distRow = std::abs(previousPoint.row - currentPoint.row);
+      int distCol = std::abs(currentPoint.col - previousPoint.col);
       
       // Case 1
       if(currentPoint.row <= previousPoint.row && currentPoint.col >= previousPoint.col)
       {
-        y = 1;
-        x = 1;
-        distRow = previousPoint.row - currentPoint.row;
-        distCol = currentPoint.col - previousPoint.col;
 
         if(distRow != 0)
         {
@@ -383,10 +450,6 @@ Collision TetrisGame::isColliding(
       // Case 2
       else if(currentPoint.row <= previousPoint.row && currentPoint.col <= previousPoint.col)
       {
-        y = 1;
-        x = 1;
-        distRow = previousPoint.row - currentPoint.row;
-        distCol = previousPoint.col - currentPoint.col;
 
         if(distRow != 0)
         {
@@ -423,10 +486,6 @@ Collision TetrisGame::isColliding(
       // Case 3
       else if(previousPoint.row <= currentPoint.row && previousPoint.col >= currentPoint.col)
       {
-        y = 1;
-        x = 1;
-        distRow = currentPoint.row - previousPoint.row;
-        distCol = previousPoint.col - currentPoint.col;
 
         if(distCol != 0)
         {
@@ -458,10 +517,6 @@ Collision TetrisGame::isColliding(
 
       else if(previousPoint.row <= currentPoint.row && previousPoint.col <= currentPoint.col)
       {
-        y = 1;
-        x = 1;
-        distRow = currentPoint.row - previousPoint.row;
-        distCol = currentPoint.col - previousPoint.col;
 
         if(distCol != 0)
         {
@@ -502,25 +557,25 @@ Collision TetrisGame::isColliding(
   {
     if(point.col >= (offset_col + cols_) || point.col <= offset_col)
     {
-      tm_->drawString(20, 20, 2, "Collision: W");
+      //tm_->drawString(20, 20, 2, "Collision: W");
       return Collision::Wall;
     }
     else if((std::find(surface.begin(), surface.end(), point) != surface.end()) && downPressed)
     {
 
-      tm_->drawString(20, 20, 2, "Collision: S");
+      //tm_->drawString(20, 20, 2, "Collision: S");
       return Collision::Surface;
     }
     else if(point.row <= offset_row)
     {
 
-      tm_->drawString(20, 20, 2, "Collision: R");
+      //tm_->drawString(20, 20, 2, "Collision: R");
       return Collision::Roof;
     }
     else if(gameField[point])
     {
 
-      tm_->drawString(20, 20, 2, "Collision: B");
+      //tm_->drawString(20, 20, 2, "Collision: B");
       return Collision::Block;
     }
     else if(point.row >= offset_row + rows_)
@@ -682,4 +737,62 @@ void TetrisGame::drawGameField() {
   }
 
   tm_->refresh();
+}
+
+void TetrisGame::drawNextTetrominoText()
+{
+  tm_->drawString(
+    nextTetrominoRowStart - 1, 
+    nextTetrominoColStart, 
+    (int)NamedColors::WHITE,
+    "Next Tetromino :");
+}
+
+void TetrisGame::drawStatistics()
+{
+  // Draw word "Statistics"
+  tm_->drawString(
+    statisticsRowStart,
+    statisticsColStart + 2,
+    (int)NamedColors::WHITE,
+    "Statistics"
+  );
+  
+  // We will need this offset to draw everything more or less alligned
+  int offset = 3;
+
+  // Draw each tetromino and current score.
+  // (I'm drawing them from last to first so that it looks 
+  // like they have even amout of space between each other)
+  for(int i = 6; i >= 0; i--)
+  {
+    std::vector<Point> shape;
+    shapeMapper[i](statisticsRowStart + offset, statisticsColStart, &shape, static_cast<NamedColors>(i + 3));
+    offset += 3;
+
+    for(Point point : shape)
+    {
+      tm_->drawPixel(point.row, point.col, (int)point.color);
+    }
+
+    tm_->drawString(statisticsRowStart + offset-3, statisticsColStart + 6, (int)NamedColors::WHITE, "000");
+  }
+
+}
+
+void TetrisGame::updateStatistics(int tetrominoIndex)
+{
+  // Update score
+  statistics[tetrominoIndex] += 1;
+
+  // Convert score to string and add leading zeroes.
+  std::string stringScore = std::to_string(statistics[tetrominoIndex]);
+  int leadingZeroes = 3 - stringScore.length();
+  stringScore.insert(0, leadingZeroes, '0');
+  
+  // Update statistics of a tetromino with given index.
+  // First coordinate is a row, which value corresponds to the index row of tetromino
+  // in the statistics table. Second argument is column of that tetromino shifted by 6.
+  // Such shifting allows us to overwrite current score.
+  tm_->drawString(statisticsRowEnd - (tetrominoIndex) * 3, statisticsColStart + 6, (int)NamedColors::WHITE, stringScore.c_str());
 }
