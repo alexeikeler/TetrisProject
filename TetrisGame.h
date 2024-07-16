@@ -66,7 +66,10 @@ public:
   int generateRandomNumber(int a, int b);
 
   NewAbstractTetromino* chooseTetromino(const int randomNumber);
-  
+
+  // Convert int to string with leading zeroes
+  std::string intToString(int number, int maxLength);
+
 private:
   TerminalManager *tm_;
   std::deque<int> deque;

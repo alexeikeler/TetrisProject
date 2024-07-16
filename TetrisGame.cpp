@@ -39,6 +39,9 @@ TetrisGame::TetrisGame(TerminalManager *tm) {
   for(int i = 0; i < numberOfTetrominos; i++)
   {
     std::vector<Point> shape;
+    // I'm starting from the third NamedColor value because it corresponds to the first color
+    // of the tetromino.
+    // Here I'm using map with functions to avoid manual creation of all shapes.
     shapeMapper[i](nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &shape, static_cast<NamedColors>(i + 3));
     shapes.push_back(shape);
   }
@@ -121,7 +124,10 @@ void TetrisGame::play() {
   // later: smart pointer ?
   // Main game loop
   int temp;
-    
+  
+
+
+
   while(true)
   {
     // Because we need to know next tetromino immideatly (to print it on the screen)
@@ -132,13 +138,21 @@ void TetrisGame::play() {
     generateCurrentAndNext();
     deque.push_back(currentRandomNumber);
     deque.push_back(nextRandomNumber);
-    
-    // Until we havent used our two random Tetrominos:
+
+    int iteration = 1;
+    //
     while(!deque.empty())
     {
+      tm_->drawString(10, 0, 0, ("Iteration: " + std::to_string(iteration)).c_str());
+      tm_->drawString(11, 0, 0, ("Deque size: " + std::to_string(deque.size())).c_str());
+      iteration += 1;     
+
+
+
       // Get first element of the deque and create current tetromino
-      temp = deque.front();
       NewAbstractTetromino *tetr = chooseTetromino(deque.front());
+      // Save current element for the statistics.
+      temp = deque.front();
       
       // Remove first element from the deque
       deque.pop_front();
@@ -562,7 +576,7 @@ void TetrisGame::decideAction(UserInput userInput) {
   int previousAngle = currentTetromino->getCurrentAngle();
 
   if (userInput.isKeyA()) {
-    // currentTetromino->rotateLeft();
+    currentTetromino->rotate(true);
   }
 
    else if (userInput.isKeyS()) {
@@ -579,6 +593,7 @@ void TetrisGame::decideAction(UserInput userInput) {
 
   else if (userInput.isKeyDown()) {
     currentTetromino->moveDown();
+    // Add additional point for moving down
     earnedPoints += 1;
   }
 
@@ -769,15 +784,21 @@ void TetrisGame::updateStatistics(int tetrominoIndex)
   statistics[tetrominoIndex] += 1;
 
   // Convert score to string and add leading zeroes.
-  std::string stringScore = std::to_string(statistics[tetrominoIndex]);
-  int leadingZeroes = 3 - stringScore.length();
-  stringScore.insert(0, leadingZeroes, '0');
+  // std::string stringScore = std::to_string(statistics[tetrominoIndex]);
+  // int leadingZeroes = 3 - stringScore.length();
+  // stringScore.insert(0, leadingZeroes, '0');
   
   // Update statistics of a tetromino with given index.
   // First coordinate is a row, which value corresponds to the index row of tetromino
-  // in the statistics table. Second argument is column of that tetromino shifted by 6.
+  // in the statistics table (We are starting from bottom). 
+  // Second argument is column of that tetromino shifted by 6.
   // Such shifting allows us to overwrite current score.
-  tm_->drawString(statisticsRowEnd - (tetrominoIndex) * 3, statisticsColStart + 6, (int)NamedColors::WHITE, stringScore.c_str());
+  tm_->drawString(
+    statisticsRowEnd - (tetrominoIndex) * 3, 
+    statisticsColStart + 6, 
+    (int)NamedColors::WHITE, 
+    intToString(statistics[tetrominoIndex], 3).c_str()
+  );
 }
 
 void TetrisGame::drawDestroyedLinesText()
@@ -795,10 +816,13 @@ void TetrisGame::updateDestroyedLines()
     updateLevel(divresult.quot);
   }
 
-  std::string stringScore = std::to_string(destroyedLines);
-  int leadingZeroes = 3 - stringScore.length();
-  stringScore.insert(0, leadingZeroes, '0'); 
-  tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, stringScore.c_str());
+  // std::string stringScore = std::to_string(destroyedLines);
+  // int leadingZeroes = 3 - stringScore.length();
+  // stringScore.insert(0, leadingZeroes, '0'); 
+  // tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, stringScore.c_str());
+  
+  tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, intToString(destroyedLines, 3).c_str());
+  
 }
 
 void TetrisGame::drawLevelText()
@@ -809,11 +833,13 @@ void TetrisGame::drawLevelText()
 void TetrisGame::updateLevel(int newLevel)
 {
   currentLevel = newLevel;
-  std::string stringLevel = std::to_string(currentLevel);
-  int leadingZeroes = 3 - stringLevel.length();
-  stringLevel.insert(0, leadingZeroes, '0');
 
-  tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, stringLevel.c_str());
+  // std::string stringLevel = std::to_string(currentLevel);
+  // int leadingZeroes = 3 - stringLevel.length();
+  // stringLevel.insert(0, leadingZeroes, '0');
+  // tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, stringLevel.c_str());
+
+  tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, intToString(currentLevel, 3).c_str());
 }
 
 void TetrisGame::drawScoreText()
@@ -824,8 +850,19 @@ void TetrisGame::drawScoreText()
 void TetrisGame::updateScore()
 {
   currentPoints += earnedPoints;
-  std::string stringPoints = std::to_string(currentPoints);
-  int leadingZeros = 6 - stringPoints.length();
-  stringPoints.insert(0, leadingZeros, '0');
-  tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, stringPoints.c_str());
+  tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, intToString(currentPoints, 6).c_str());
+  // std::string stringPoints = std::to_string(currentPoints);
+  // int leadingZeros = 6 - stringPoints.length();
+  // stringPoints.insert(0, leadingZeros, '0');
+  // tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, stringPoints.c_str());
+  
+
+}
+
+std::string TetrisGame::intToString(int number, int maxLength)
+{
+  std::string stringNumber = std::to_string(number);
+  int leadingZeroes =  maxLength - stringNumber.length();
+  stringNumber.insert(0, leadingZeroes, '0');
+  return stringNumber;
 }
