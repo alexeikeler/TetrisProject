@@ -123,77 +123,69 @@ void TetrisGame::play() {
 
   // later: smart pointer ?
   // Main game loop
-  int temp;
   
+  int current;
 
+  // Because we need to know next tetromino immideatly (to print it on the screen)
+  // we need to generate two rundom numbers (r1 != r2) and use deque
+  // to code correct behaviour.
 
+  // Generate initial random numbers and put them at the back of the deque.
+  generateCurrentAndNext();
+  deque.push_back(currentRandomNumber);
+  deque.push_back(nextRandomNumber);
 
-  while(true)
+  // Main game loop.
+  while(!deque.empty())
   {
-    // Because we need to know next tetromino immideatly (to print it on the screen)
-    // we need to generate two rundom numbers (r1 != r2) and use deque
-    // to code correct behaviour.
+  
+    // Get first element of the deque and create current tetromino
+    // Save current element for the statistics.
 
-    // Generate initial random numbers and put them at the back of the deque.
-    generateCurrentAndNext();
-    deque.push_back(currentRandomNumber);
-    deque.push_back(nextRandomNumber);
+    current = deque.front();
+    NewAbstractTetromino *tetr = chooseTetromino(current);
 
-    int iteration = 1;
-    //
-    while(!deque.empty())
+    // Remove first element from the deque
+    deque.pop_front();
+
+    // Generate next random numbers and add them to the deque.
+    // We need to add them only if we have 1 element left, because
+    // otherwise our deque will be growing infinitely.
+    if(deque.size() == 1)
     {
-      tm_->drawString(10, 0, 0, ("Iteration: " + std::to_string(iteration)).c_str());
-      tm_->drawString(11, 0, 0, ("Deque size: " + std::to_string(deque.size())).c_str());
-      iteration += 1;     
-
-
-
-      // Get first element of the deque and create current tetromino
-      NewAbstractTetromino *tetr = chooseTetromino(deque.front());
-      // Save current element for the statistics.
-      temp = deque.front();
-      
-      // Remove first element from the deque
-      deque.pop_front();
-
-      // Generate next random numbers and add them to the deque
       generateCurrentAndNext();
       deque.push_back(currentRandomNumber);
       deque.push_back(nextRandomNumber);
-      
-      // Here we get the element that follows the elements from the line 178, 
-      // since we used deque.pop_front() (line 181). 
-      // Thus the resulting element is the following.
-      drawNextTetromino(deque.front());
+    }
+    
+    // Here we get the element that follows the element that is stored in "current", 
+    // since we used deque.pop_front(). 
+    // Thus the resulting element is the following.
+    drawNextTetromino(deque.front());
 
+    // Assign current tetromino.
+    currentTetromino = tetr;
+    drawTetromino();
 
-      currentTetromino = tetr;
-      drawTetromino();
+    // until it's alive (i.e not collided)
+    while (currentTetromino != nullptr) {
 
-      // until it's alive (i.e not collided)
-      while (currentTetromino != nullptr) {
-
-        UserInput userInput = tm_->getUserInput();
-        // find new surface, to check for collision
-        decideAction(userInput);
-        // Small delay, so that tetromino will have enought time to
-        // be erased and drawn with new coordinates
-        // (without the delay it's flickering)
-        usleep(20'000);
-      }
-
-      updateStatistics(temp);
-
-      // Avoid memory leaks
-
-      delete currentTetromino;
-      delete tetr;
-      // Remove used number
+      UserInput userInput = tm_->getUserInput();
+      // find new surface, to check for collision
+      decideAction(userInput);
+      // Small delay, so that tetromino will have enought time to
+      // be erased and drawn with new coordinates
+      // (without the delay it's flickering)
+      usleep(20'000);
     }
 
+    updateStatistics(current);
+
+    // Avoid memory leaks
+    delete currentTetromino;
+    delete tetr;
   }
-  
+
 }
 
 void TetrisGame::reshapeGameField()
