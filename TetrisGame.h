@@ -12,11 +12,11 @@ enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor};
 
 class TetrisGame {
 public:
-  TetrisGame(TerminalManager *tm);
+  TetrisGame(TerminalManager *tm, int level, char rrk, char lrk);
   ~TetrisGame(){};
 
   void drawLevelText();
-  void updateLevel(int newLevel);
+  void updateLevelAndSpeed(int increaseLevelBy=0);
 
   void drawScoreText();
   void updateScore();
@@ -92,10 +92,6 @@ private:
   const int offset_row = 14;
   const int offset_col = 40;
 
-  // Color for the borders of the game
-  // currenlty 1, but will be changed
-  const int borderColor = 1;
-
   // Current tetromino which will be displayed on the screen
   NewAbstractTetromino *currentTetromino;
 
@@ -104,8 +100,40 @@ private:
   int currentRandomNumber;
   int nextRandomNumber;
 
+  std::unordered_map<int, double> fallingSpeed = {
+    {0, (double)48/60},
+    {1, (double)43/60},
+    {2, (double)38/60},
+    {3, (double)33/60},
+    {4, (double)28/60},
+    {5, (double)23/60},
+    {6, (double)18/60},
+    {7, (double)13/60},
+    {8, (double)8/60},
+    {9, (double)6/60},
+    {10, (double)5/60},
+    {11, (double)5/60},
+    {12, (double)5/60},
+    {13, (double)4/60},
+    {14, (double)4/60},
+    {15, (double)4/60},
+    {16, (double)3/60},
+    {17, (double)3/60},
+    {18, (double)3/60},
+    {19, (double)2/60},
+    {20, (double)2/60},
+    {21, (double)2/60},
+    {22, (double)2/60},
+    {23, (double)2/60},
+    {24, (double)2/60},
+    {25, (double)2/60},
+    {26, (double)2/60},
+    {27, (double)2/60},
+    {28, (double)2/60},
+    {29, (double)1/60},
+  };
   // Falling speed (depends from currentLevel)
-  float fallingSpeed;
+  double currentSpeed = fallingSpeed[0];
 
   // keys for rotation
   // default a & s
@@ -157,6 +185,9 @@ private:
   // the removed lines 
   int linesRow = 12;
   int linesCol = 43;
+  // We will need this variable to update the level
+  // properly
+  int previousQuotient = 0;
   int destroyedLines = 0;
 
   // Coordinates of the "LEVEL-xxx" line and current level.

@@ -45,6 +45,9 @@ public:
   bool isKeyA() const;
   bool isKeyS() const;
 
+  bool isRightRotationKey(char rightRotationKey) const;
+  bool isLeftRotationKey(char ritghtRotationKey) const;
+
   // The code of the key that was pressed.
   int keycode_;
   int mouseRow_ = -1;

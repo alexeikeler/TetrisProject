@@ -4,10 +4,15 @@
 #include "./TerminalManager.h"
 #include "./TetrisGame.h"
 #include "./Tetromino.h"
+#include "./ParseArguments.h"
+#include <iostream>
 
-int main() {
-  // TODO: Move this to TerminalManager.h and create
-  // enum to avoid magic numbers when using colors
+
+std::vector<std::pair<Color, Color>> createColorVector()
+{
+
+    std::vector<std::pair<Color, Color>> colorVector;
+
   std::pair MainColorPair =
       std::pair(Color(1.0, 0.0, 0.0), Color(0.0, 0.0, 0.0));
   std::pair BlackColorPair =
@@ -31,8 +36,6 @@ int main() {
 
   std::pair WhileColorPair(Color(1, 1, 1), Color(0.0, 0.0, 0.0));
 
-  std::vector<std::pair<Color, Color>> colorVector;
-
   colorVector.push_back(MainColorPair);
   colorVector.push_back(BlackColorPair);
   colorVector.push_back(BordersColorPair);
@@ -44,9 +47,27 @@ int main() {
   colorVector.push_back(TetrominoZColorPair);
   colorVector.push_back(TetrominoSColorPair);
   colorVector.push_back(WhileColorPair);
+
+  return colorVector;
+}
+
+
+
+
+int main(int argc, char **argv) {
+  std::vector<std::pair<Color, Color>> colorVector = createColorVector();
+
+  Parser parser;
+  parser.parseArguments(argc, argv);
   
+  int level = parser.getLevel();
+  char rightRotationKey = parser.getRightRotationKey();
+  char leftRotationKey = parser.getLeftRotationKey();
+
+//   std::cout << "level: " << level << "\nrightRotationKey: " << rightRotationKey << "\nleftRotationKey: " << leftRotationKey << std::endl;
+//   exit(0);
 
   TerminalManager *tm = new TerminalManager(colorVector);
-  TetrisGame game(tm);
+  TetrisGame game(tm, level, rightRotationKey, leftRotationKey);
   game.play();
 }

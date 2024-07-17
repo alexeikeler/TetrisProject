@@ -11,14 +11,21 @@
 #include <random>
 #include <chrono>
 #include <stdlib.h>
+#include <thread>
 
 
-TetrisGame::TetrisGame(TerminalManager *tm) {
+TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
   tm_ = tm;
+  currentLevel += level;
+  rightRotationKey = rrk;
+  leftRotationKey = lrk;
 
-  // draw the game field, statistics and next
+
+  // draw the game field, current level, score, next tetromino, statistic
+  // and destroyed lines texts.
   drawGameField();
   drawLevelText();
+  updateLevelAndSpeed();
   drawScoreText();
   drawNextTetrominoText();
   drawStatistics();
@@ -42,6 +49,8 @@ TetrisGame::TetrisGame(TerminalManager *tm) {
     // I'm starting from the third NamedColor value because it corresponds to the first color
     // of the tetromino.
     // Here I'm using map with functions to avoid manual creation of all shapes.
+    // I'm also creating shapes this way because I need them more then once
+    // (for example for statistics).
     shapeMapper[i](nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &shape, static_cast<NamedColors>(i + 3));
     shapes.push_back(shape);
   }
@@ -138,7 +147,7 @@ void TetrisGame::play() {
   // Main game loop.
   while(!deque.empty())
   {
-  
+   
     // Get first element of the deque and create current tetromino
     // Save current element for the statistics.
 
@@ -169,7 +178,6 @@ void TetrisGame::play() {
 
     // until it's alive (i.e not collided)
     while (currentTetromino != nullptr) {
-
       UserInput userInput = tm_->getUserInput();
       // find new surface, to check for collision
       decideAction(userInput);
@@ -567,11 +575,12 @@ void TetrisGame::decideAction(UserInput userInput) {
   std::vector<Point> previousLocation = currentTetromino->getCurrentLocation();
   int previousAngle = currentTetromino->getCurrentAngle();
 
-  if (userInput.isKeyA()) {
+  
+  if (userInput.isLeftRotationKey(leftRotationKey)) {
     currentTetromino->rotate(true);
   }
 
-   else if (userInput.isKeyS()) {
+   else if (userInput.isRightRotationKey(rightRotationKey)) {
     currentTetromino->rotate(false);
   }
 
@@ -586,6 +595,7 @@ void TetrisGame::decideAction(UserInput userInput) {
   else if (userInput.isKeyDown()) {
     currentTetromino->moveDown();
     // Add additional point for moving down
+    // faster
     earnedPoints += 1;
   }
 
@@ -609,8 +619,8 @@ void TetrisGame::decideAction(UserInput userInput) {
 
   Collision collision = isColliding(
     userInput.isKeyDown(), 
-    userInput.isKeyA(), 
-    userInput.isKeyS(), 
+    userInput.isLeftRotationKey(leftRotationKey), 
+    userInput.isRightRotationKey(rightRotationKey), 
     previousLocation);
   
 
@@ -656,6 +666,8 @@ void TetrisGame::decideAction(UserInput userInput) {
   drawTetromino();
 }
 
+
+
 void TetrisGame::removeTetrominoFromScreen(std::vector<Point> location) {
   for (auto point : location) {
     tm_->drawPixel(point.row, point.col, (int)NamedColors::BLACK);
@@ -682,10 +694,6 @@ void TetrisGame::drawGameField() {
   for (int i = offset_row + 1; i < rows_ + offset_row; i++) {
     // Draw "walls"
     tm_->drawPixel(i, offset_col, 2);
-    
-    // // Numerate rows
-    // tm_->drawString(i, offset_col - 2, 2, (std::to_string(i).c_str()));
-    
     tm_->drawPixel(i, offset_col + cols_, 2);
   }
 
@@ -693,18 +701,6 @@ void TetrisGame::drawGameField() {
   for (int i = offset_col; i < cols_ + offset_col + 1; i++) {
     // Draw top and bottom parts of game field
     tm_->drawPixel(offset_row, i, 2);
-
-    // if(i % 2 == 0)
-    // {
-
-    //   tm_->drawString(offset_row - 2, i, 2, (std::to_string(i).c_str()));
-
-    // }
-    // else
-    // {
-    //   tm_->drawString(offset_row - 3, i, 2, (std::to_string(i).c_str()));
-
-    // }
     tm_->drawPixel(offset_row + rows_, i, 2);
   }
 
@@ -800,21 +796,19 @@ void TetrisGame::drawDestroyedLinesText()
 
 void TetrisGame::updateDestroyedLines()
 {
-  // Get quotient and remainder. If quotient > then current level,
+  // TODO: Fix level. It won't work if the level was set
+  // via cli args.
+
+  // Get quotient and remainder. If quotient > previousQuotient,
   // then we have enough points for the next level.
   div_t divresult = std::div(destroyedLines, 10);
-  if(divresult.quot > currentLevel)
+  if(divresult.quot > previousQuotient)
   {
-    updateLevel(divresult.quot);
+    updateLevelAndSpeed(1);
+    previousQuotient = divresult.quot;
   }
-
-  // std::string stringScore = std::to_string(destroyedLines);
-  // int leadingZeroes = 3 - stringScore.length();
-  // stringScore.insert(0, leadingZeroes, '0'); 
-  // tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, stringScore.c_str());
   
   tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, intToString(destroyedLines, 3).c_str());
-  
 }
 
 void TetrisGame::drawLevelText()
@@ -822,14 +816,10 @@ void TetrisGame::drawLevelText()
   tm_->drawString(levelRow, levelCol, (int)NamedColors::WHITE, "LEVEL - 000");
 }
 
-void TetrisGame::updateLevel(int newLevel)
+void TetrisGame::updateLevelAndSpeed(int increaseLevelBy)
 {
-  currentLevel = newLevel;
-
-  // std::string stringLevel = std::to_string(currentLevel);
-  // int leadingZeroes = 3 - stringLevel.length();
-  // stringLevel.insert(0, leadingZeroes, '0');
-  // tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, stringLevel.c_str());
+  currentLevel += increaseLevelBy;
+  currentSpeed = fallingSpeed[currentLevel];
 
   tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, intToString(currentLevel, 3).c_str());
 }
@@ -843,12 +833,6 @@ void TetrisGame::updateScore()
 {
   currentPoints += earnedPoints;
   tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, intToString(currentPoints, 6).c_str());
-  // std::string stringPoints = std::to_string(currentPoints);
-  // int leadingZeros = 6 - stringPoints.length();
-  // stringPoints.insert(0, leadingZeros, '0');
-  // tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, stringPoints.c_str());
-  
-
 }
 
 std::string TetrisGame::intToString(int number, int maxLength)
