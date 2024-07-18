@@ -1,6 +1,7 @@
 // Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
 // Code snippets from the lectures where used
 
+#pragma once
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
 #include <unordered_map>

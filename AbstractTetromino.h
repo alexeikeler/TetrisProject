@@ -5,6 +5,7 @@
 
 #include "./Point.h"
 #include <vector>
+#include <cmath>
 
 class NewAbstractTetromino{
   public:

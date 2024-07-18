@@ -2,3 +2,4 @@
 // Code snippets from the lectures where used
 
 // Currently empty, but will be added later
+#pragma once
