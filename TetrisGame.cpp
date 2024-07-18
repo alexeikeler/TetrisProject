@@ -12,7 +12,7 @@
 #include <chrono>
 #include <stdlib.h>
 #include <thread>
-
+#include <stdio.h>
 
 TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
   tm_ = tm;
@@ -130,9 +130,18 @@ NewAbstractTetromino* TetrisGame::chooseTetromino(int randomNumber)
 
 void TetrisGame::play() {
 
+  // UserInput testInput;
+  // testInput.keycode_ = 258;
+  // We will treat currentSpeed as a "time" variable.
+  // For example: if we start the game with level 0 we will wait 48/60 <=> 0.8 sec <=> 800 ms.
+  // for user input and if we won't get any then we will move tetromino down.
+  int timer = currentSpeed;
+
   // later: smart pointer ?
   // Main game loop
   
+  // We will need to save current tetromino id
+  // to be able to update statistics later.
   int current;
 
   // Because we need to know next tetromino immideatly (to print it on the screen)
@@ -178,13 +187,32 @@ void TetrisGame::play() {
 
     // until it's alive (i.e not collided)
     while (currentTetromino != nullptr) {
-      UserInput userInput = tm_->getUserInput();
-      // find new surface, to check for collision
-      decideAction(userInput);
-      // Small delay, so that tetromino will have enought time to
-      // be erased and drawn with new coordinates
-      // (without the delay it's flickering)
-      usleep(20'000);
+        UserInput userInput = tm_->getUserInput();
+        
+        // Wait for input
+        if(userInput.keycode_ == -1)
+        {
+          timer -= 1;
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        // If we get input from user
+        else
+        {
+          decideAction(userInput, false);
+          usleep(20'000);
+          //timer = currentSpeed;
+        }
+        // If we didn't get user input and the time is up
+        if(timer == 0)
+        {
+          // Set keycode to Down
+          userInput.keycode_ = 258;
+          decideAction(userInput, true);
+          usleep(20'000);
+          timer = currentSpeed;
+        }
+        
+      
     }
 
     updateStatistics(current);
@@ -194,6 +222,26 @@ void TetrisGame::play() {
     delete tetr;
   }
 
+}
+
+void TetrisGame::gameOver()
+{
+  for(int i = 0; i < tm_->numRows(); i++)
+  {
+    for(int j = 0; j < tm_->numCols(); j++)
+    {
+      tm_->drawPixel(i, j, (int)NamedColors::BLACK);
+    }
+  }
+
+  tm_->drawString(tm_->numRows() / 2, tm_->numCols() / 2, (int)NamedColors::WHITE, "GAME OVER!");
+  tm_->refresh();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(gameOverTimeroutMs));
+  // Call destructor to avoid ncurses terminal bug
+  tm_->~TerminalManager();
+
+  exit(0);
 }
 
 void TetrisGame::reshapeGameField()
@@ -366,7 +414,7 @@ Collision TetrisGame::isColliding(
   // we don't want to perform rotation if something is on the way.
   // (see erfahrungen.pdf (collision for rotation) for more details)
   //-----------------------------------------------------------------------------------------
-  // Tetromino I behaves strange 
+  
   if(leftRotaion || rightRotation)
   {
     for(int i = 0; i < currentTetromino->getTetrominoSize(); i++)
@@ -527,25 +575,20 @@ Collision TetrisGame::isColliding(
   {
     if(point.col >= (offset_col + cols_) || point.col <= offset_col)
     {
-      //tm_->drawString(20, 20, 2, "Collision: W");
       return Collision::Wall;
     }
     else if((std::find(surface.begin(), surface.end(), point) != surface.end()) && downPressed)
     {
 
-      //tm_->drawString(20, 20, 2, "Collision: S");
       return Collision::Surface;
     }
     else if(point.row <= offset_row)
     {
-
-      //tm_->drawString(20, 20, 2, "Collision: R");
       return Collision::Roof;
     }
     else if(gameField[point])
     {
 
-      //tm_->drawString(20, 20, 2, "Collision: B");
       return Collision::Block;
     }
     else if(point.row >= offset_row + rows_)
@@ -561,6 +604,13 @@ void TetrisGame::placeTetromino()
 {
   for(auto point : currentTetromino->getCurrentLocation())
   {
+    // If we are trying to place a tetromino
+    // on the roof level it's game over.
+    if(point.row == offset_row+1)
+    {
+      gameOver();
+    }
+
     // We can't just write gameField[point] = true, because we out new point
     // can have new color.
     gameField.erase(point);
@@ -568,7 +618,7 @@ void TetrisGame::placeTetromino()
   }
 }
 
-void TetrisGame::decideAction(UserInput userInput) {
+void TetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
 
   // Save tetromino location before moving
   // in case of collision
@@ -594,9 +644,12 @@ void TetrisGame::decideAction(UserInput userInput) {
 
   else if (userInput.isKeyDown()) {
     currentTetromino->moveDown();
-    // Add additional point for moving down
-    // faster
-    earnedPoints += 1;
+    // Add additional point for moving down faster.
+    // We are counting only movement from player.
+    if(!isArtificialMovement)
+    {
+      earnedPoints += 1;
+    }
   }
 
   else if(userInput.isKeyUp()){
@@ -656,12 +709,21 @@ void TetrisGame::decideAction(UserInput userInput) {
     return;
   }
 
-  else if(collision == Collision::Wall || collision == Collision::Block || collision == Collision::Roof)
+  else if(collision == Collision::Wall || collision == Collision::Block)
   {
     currentTetromino->setCurrentLocation(previousLocation);
     currentTetromino->setCurrentAngle(previousAngle);
+  }  
+
+  else if(collision == Collision::Roof)
+  {
+    tm_->drawString(10, 0, 0, "In roof!");
+    gameOver();
   }
 
+
+  // Check if there are any tetrominos on the roof row.
+  // If so it's game over.
   removeTetrominoFromScreen(previousLocation);
   drawTetromino();
 }
@@ -700,7 +762,7 @@ void TetrisGame::drawGameField() {
 
   for (int i = offset_col; i < cols_ + offset_col + 1; i++) {
     // Draw top and bottom parts of game field
-    tm_->drawPixel(offset_row, i, 2);
+    //tm_->drawPixel(offset_row, i, 2);
     tm_->drawPixel(offset_row + rows_, i, 2);
   }
 
@@ -796,8 +858,6 @@ void TetrisGame::drawDestroyedLinesText()
 
 void TetrisGame::updateDestroyedLines()
 {
-  // TODO: Fix level. It won't work if the level was set
-  // via cli args.
 
   // Get quotient and remainder. If quotient > previousQuotient,
   // then we have enough points for the next level.
@@ -819,7 +879,15 @@ void TetrisGame::drawLevelText()
 void TetrisGame::updateLevelAndSpeed(int increaseLevelBy)
 {
   currentLevel += increaseLevelBy;
-  currentSpeed = fallingSpeed[currentLevel];
+
+  if(currentLevel <= maxLevel)
+  {
+    currentSpeed = fallingSpeed[currentLevel];
+  }
+  else
+  {
+    currentSpeed = fallingSpeed[maxLevel];
+  }
 
   tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, intToString(currentLevel, 3).c_str());
 }

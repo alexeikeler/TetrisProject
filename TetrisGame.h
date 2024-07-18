@@ -8,7 +8,7 @@
 #include <set>
 #include <functional>
 
-enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor};
+enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor, GameOver};
 
 class TetrisGame {
 public:
@@ -32,7 +32,7 @@ public:
 
   void drawGameField();
   void play();
-
+  void gameOver();
 
   // Removing in this context means
   // drawing black pixels on top of the current coordinates
@@ -49,7 +49,7 @@ public:
   // "Place" tetromino in gameField
   void placeTetromino();
   // Decide what to do with the current tetromino
-  void decideAction(UserInput userInput);  
+  void decideAction(UserInput userInput, bool isArtificialMovement);  
   
   // Check if tetromino colliding
   Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
@@ -100,38 +100,42 @@ private:
   int currentRandomNumber;
   int nextRandomNumber;
 
-  std::unordered_map<int, double> fallingSpeed = {
-    {0, (double)48/60},
-    {1, (double)43/60},
-    {2, (double)38/60},
-    {3, (double)33/60},
-    {4, (double)28/60},
-    {5, (double)23/60},
-    {6, (double)18/60},
-    {7, (double)13/60},
-    {8, (double)8/60},
-    {9, (double)6/60},
-    {10, (double)5/60},
-    {11, (double)5/60},
-    {12, (double)5/60},
-    {13, (double)4/60},
-    {14, (double)4/60},
-    {15, (double)4/60},
-    {16, (double)3/60},
-    {17, (double)3/60},
-    {18, (double)3/60},
-    {19, (double)2/60},
-    {20, (double)2/60},
-    {21, (double)2/60},
-    {22, (double)2/60},
-    {23, (double)2/60},
-    {24, (double)2/60},
-    {25, (double)2/60},
-    {26, (double)2/60},
-    {27, (double)2/60},
-    {28, (double)2/60},
-    {29, (double)1/60},
+  // Falling speed for each level in ms.
+  std::unordered_map<int, int> fallingSpeed = {
+    {0, 800},
+    {1, 716},
+    {2, 633},
+    {3, 550},
+    {4, 466},
+    {5, 383},
+    {6, 300},
+    {7, 216},
+    {8, 133},
+    {9, 100},
+    {10, 83},
+    {11, 83},
+    {12, 83},
+    {13, 66},
+    {14, 66},
+    {15, 66},
+    {16, 50},
+    {17, 50},
+    {18, 50},
+    {19, 33},
+    {20, 33},
+    {21, 33},
+    {22, 33},
+    {23, 33},
+    {24, 33},
+    {25, 33},
+    {26, 33},
+    {27, 33},
+    {28, 33},
+    {29, 16},
   };
+
+  int maxLevel = 29;
+
   // Falling speed (depends from currentLevel)
   double currentSpeed = fallingSpeed[0];
 
@@ -211,4 +215,7 @@ private:
     {3, 300},
     {4, 1200}
   };
+
+  // Hold "Game over" for 1.5 sec.
+  int gameOverTimeroutMs = 1500;
 };
