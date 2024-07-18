@@ -7,9 +7,10 @@
 #include <string>
 #include <vector>
 
-
+// Structure to create tetromino shapes and place them inside the vector with Points.
 struct TetrominoShape{
     
+    // Create T shape tetromino.
     static void createTShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow, startCol, color});
@@ -17,7 +18,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow + 1, startCol + 1, color});
       container->push_back(Point{startRow, startCol + 2, color});
     }
-
+    // Create L shape tetromino.
     static void createLShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow, startCol, color});
@@ -26,6 +27,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow + 1, startCol + 2, color});
     }
 
+    // Create J shape tetromino.
     static void createJShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow + 1, startCol, color});
@@ -34,6 +36,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow, startCol + 2, color});
     }
 
+    // Create O shape tetromino.
     static void createOShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow, startCol, color});
@@ -42,6 +45,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow + 1, startCol + 1, color});
     }
 
+    // Create I shape tetromino.
     static void createIShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow, startCol, color});
@@ -50,6 +54,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow, startCol + 3, color});
     }
 
+    // Create Z shape tetromino.
     static void createZShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow, startCol, color});
@@ -58,6 +63,7 @@ struct TetrominoShape{
       container->push_back(Point{startRow + 1, startCol + 2, color});
     }
 
+        // Create S shape tetromino.
     static void createSShape(int startRow, int startCol, std::vector<Point> *container, NamedColors color)
     {
       container->push_back(Point{startRow + 1, startCol, color});
@@ -68,6 +74,8 @@ struct TetrominoShape{
 };
 
 
+// Tetromino classes. I've decided to use inheritence here
+// to avoid code duplication, because for the most part it's the same stuff.
 class TetrominoT : public NewAbstractTetromino{
   public:
     TetrominoT();

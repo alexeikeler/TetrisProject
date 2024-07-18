@@ -1,3 +1,13 @@
+// Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
+// Code snippets from the lectures where used
+//
+// This wikipedia page was used in order to figure out rotation
+// formula for the tetrominos.
+//
+// https://en.wikipedia.org/wiki/Rotation_matrix
+//
+//
+
 #include "./AbstractTetromino.h"
 #include <cmath>
 
@@ -35,10 +45,12 @@ void NewAbstractTetromino::moveUp()
 
 void NewAbstractTetromino::rotate(bool left)
 {
-    // Remember to shift tetrominos 
+    // We will need center point of the tetromino
+    // in order to rotate it properly
     Point center = currentLocation_[centerIndex];
+    // If we are rotating to the left side, then the angle should be negative.
     int negate;
-  
+    
     if(left)
     {
         negate = -1;
@@ -48,6 +60,7 @@ void NewAbstractTetromino::rotate(bool left)
         negate = 1;
     }
     
+    // Translate points first, then apply formula from wikipedia.
     for(Point &point : currentLocation_)
     { 
         int translatedCol = point.col - center.col;
@@ -59,7 +72,7 @@ void NewAbstractTetromino::rotate(bool left)
         point.col = rotatedCol;
     }
 
-    
+    // Keep track of the current angle.
     currentAngle_ = (currentAngle_ + (90 * negate)) % 360;
     if( currentAngle_ < 0)
     {

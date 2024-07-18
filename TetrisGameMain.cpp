@@ -52,21 +52,20 @@ std::vector<std::pair<Color, Color>> createColorVector()
 }
 
 
-
-
 int main(int argc, char **argv) {
+  // Create color vector.
   std::vector<std::pair<Color, Color>> colorVector = createColorVector();
-
+  
+  // Create parser in order to parse arguments.
   Parser parser;
   parser.parseArguments(argc, argv);
   
+  // Get values from parsed args.
   int level = parser.getLevel();
   char rightRotationKey = parser.getRightRotationKey();
   char leftRotationKey = parser.getLeftRotationKey();
 
-//   std::cout << "level: " << level << "\nrightRotationKey: " << rightRotationKey << "\nleftRotationKey: " << leftRotationKey << std::endl;
-//   exit(0);
-
+  // Create new terminal manager with colors and start the game.
   TerminalManager *tm = new TerminalManager(colorVector);
   TetrisGame game(tm, level, rightRotationKey, leftRotationKey);
   game.play();

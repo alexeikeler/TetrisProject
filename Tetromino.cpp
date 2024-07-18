@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 
+// For the most part we only need to define constructors. The structure of the
+// inherited abstract class will do the rest. However some of the tetrominos (O, I, Z, S)
+// do require custom rotation.
 // ------------------------------------------------------------------------
 TetrominoT::TetrominoT()
 {

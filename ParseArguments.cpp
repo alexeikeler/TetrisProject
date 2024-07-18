@@ -1,3 +1,10 @@
+// Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
+// Code snippets from the lectures where used
+//
+// This page was used as an example:
+// https://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Option-Example.html
+//
+
 #include "./ParseArguments.h"
 #include <iostream>
 #include <getopt.h>

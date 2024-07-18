@@ -20,10 +20,10 @@ class NewAbstractTetromino{
     virtual void rotate(bool left);
 
     // Getters
-    std::vector<Point> getCurrentLocation() {return currentLocation_;}
-    NamedColors getTetrominoColor() {return color_;}
-    int getTetrominoSize() {return size_;}
-    int getCurrentAngle() {return currentAngle_;}
+    std::vector<Point> getCurrentLocation() const {return currentLocation_;}
+    NamedColors getTetrominoColor() const {return color_;}
+    int getTetrominoSize() const {return size_;};
+    int getCurrentAngle() const {return currentAngle_;}
 
     // Setters
     void setCurrentLocation(std::vector<Point> location) {currentLocation_ = location;}
@@ -37,8 +37,13 @@ class NewAbstractTetromino{
     int centerIndex;
     //
 
+    // Vector with points that define current position of the tetromino.
     std::vector<Point> currentLocation_;
+    // Size of the tetrominos.
     const int size_ = 4;
+    // Start angle.
     int currentAngle_ = 0;  
-    double rotation_angle = 90.0 * (M_PI / 180);
+    // Rotation angle (always 90 degrees). We do need to convert it from
+    // radians to degrees.
+    const double rotation_angle = 90.0 * (M_PI / 180);
 };

@@ -15,6 +15,7 @@
 #include <stdio.h>
 
 TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
+  
   tm_ = tm;
   currentLevel += level;
   rightRotationKey = rrk;
@@ -30,9 +31,12 @@ TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
   drawNextTetrominoText();
   drawStatistics();
   drawDestroyedLinesText();
+
+  // Update surface block to provide correct collision.
   updateSurface();
 
-  // Fill logical game field
+  // Fill logical game field. Initially all points are false,
+  // because the player haven't placed anything yet.
     for(int i = offset_row; i < offset_row + rows_; i++)
     {
       
@@ -42,6 +46,7 @@ TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
       }
     }
 
+
   // Create shapes for "Next" tetromino box.
   for(int i = 0; i < numberOfTetrominos; i++)
   {
@@ -49,7 +54,7 @@ TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
     // I'm starting from the third NamedColor value because it corresponds to the first color
     // of the tetromino.
     // Here I'm using map with functions to avoid manual creation of all shapes.
-    // I'm also creating shapes this way because I need them more then once
+    // I'm also creating shapes this way because I need them to be created more then once
     // (for example for statistics).
     shapeMapper[i](nextTetrominoRowStart + 1, nextTetrominoColStart + 2, &shape, static_cast<NamedColors>(i + 3));
     shapes.push_back(shape);
@@ -78,21 +83,22 @@ void TetrisGame::generateCurrentAndNext(int a, int b)
   currentRandomNumber = generateRandomNumber(a, b);
   nextRandomNumber = generateRandomNumber(a, b);
   
-  // To avoid repeating tetrominos we check if
-  // current == next
-  // and if
-  // current == previous
+  // To avoid repeating tetrominos we need check if
+  // current == next and if current == previous.
+  // We will repeat this process until we'll get different numbers.
   while((currentRandomNumber == previousRandomNumber) || (currentRandomNumber == nextRandomNumber))
   {
     // Generate new number if currentRandomNumber == nextRandomNumber.
     currentRandomNumber = generateRandomNumber(a, b);
   }
-    
+  
+  // Save nextRandomNumber to avoid situation where tetromino from
+  // the old cycle repeats last tetromino from the previous cycle.
   previousRandomNumber = nextRandomNumber;
 
 }
 
-
+// Choose tetromino based on the generated numbers
 NewAbstractTetromino* TetrisGame::chooseTetromino(int randomNumber)
 {
   if(randomNumber == 0)
@@ -127,6 +133,7 @@ NewAbstractTetromino* TetrisGame::chooseTetromino(int randomNumber)
   // Just to supress warning
   return new TetrominoO();
 };
+
 
 void TetrisGame::play() {
 
@@ -176,8 +183,8 @@ void TetrisGame::play() {
       deque.push_back(nextRandomNumber);
     }
     
-    // Here we get the element that follows the element that is stored in "current", 
-    // since we used deque.pop_front(). 
+    // Here we will get the element that follows the element that is stored in "current", 
+    // since deque.pop_front() was used.  
     // Thus the resulting element is the following.
     drawNextTetromino(deque.front());
 
@@ -200,7 +207,6 @@ void TetrisGame::play() {
         {
           decideAction(userInput, false);
           usleep(20'000);
-          //timer = currentSpeed;
         }
         // If we didn't get user input and the time is up
         if(timer == 0)
@@ -211,10 +217,9 @@ void TetrisGame::play() {
           usleep(20'000);
           timer = currentSpeed;
         }
-        
-      
     }
 
+    // Update stats
     updateStatistics(current);
 
     // Avoid memory leaks
@@ -412,7 +417,6 @@ Collision TetrisGame::isColliding(
   // we need to check left and right sides (depends on rotation)
   // to avoid rotation "through" points. In other words:
   // we don't want to perform rotation if something is on the way.
-  // (see erfahrungen.pdf (collision for rotation) for more details)
   //-----------------------------------------------------------------------------------------
   
   if(leftRotaion || rightRotation)

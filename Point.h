@@ -23,7 +23,8 @@ enum class NamedColors {
 };
 
 // Simple class to represent a point on a screen
-// with row, col coordinates
+// with row, col coordinates and "==", ">". We need them
+// for set and unordered map.
 class Point {
 public:
     int row;
@@ -41,6 +42,7 @@ public:
 
 };
 
+// Custom hash function for unordered map.
 template <> class std::hash<Point>{
     public:
 

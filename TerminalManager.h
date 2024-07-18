@@ -44,7 +44,6 @@ public:
   bool isMouseclick() const;
   bool isKeyA() const;
   bool isKeyS() const;
-
   bool isRightRotationKey(char rightRotationKey) const;
   bool isLeftRotationKey(char ritghtRotationKey) const;
 
