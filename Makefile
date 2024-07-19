@@ -23,7 +23,7 @@ checkstyle:
 	clang-format --dry-run -Werror *.h *.cpp
 
 test: $(TEST_BINARIES)
-	#for T in $(TEST_BINARIES); do ./$$T || exit; done
+	for T in $(TEST_BINARIES); do ./$$T || exit; done
 
 %.o: %.cpp *.h
 	$(CXX) -c $<

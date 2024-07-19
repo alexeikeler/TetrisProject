@@ -103,10 +103,10 @@ TEST(Tetromino_T_Creation, Tetromino)
     int startingCol = tetrT->getStartingCol();
 
     std::vector<Point> tetrTStartingLocation = {
-        Point{startingRow, startingCol, NamedColors::TETROMINO_I},
-        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_I},
-        Point{startingRow + 1, startingCol + 1, NamedColors::TETROMINO_I},
-        Point{startingRow, startingCol + 2, NamedColors::TETROMINO_I}
+        Point{startingRow, startingCol, NamedColors::TETROMINO_T},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_T},
+        Point{startingRow + 1, startingCol + 1, NamedColors::TETROMINO_T},
+        Point{startingRow, startingCol + 2, NamedColors::TETROMINO_T}
     };
 
     ASSERT_EQ(tetrTStartingLocation, tetrT->getCurrentLocation());
@@ -114,9 +114,128 @@ TEST(Tetromino_T_Creation, Tetromino)
     delete tetrT;
 }
 
+TEST(Tetromino_L_Creation, Tetromino)
+{
+    NewAbstractTetromino *tetrL = new TetrominoL();
+    
+    ASSERT_EQ(4, tetrL->getTetrominoSize());
+    ASSERT_EQ(0, tetrL->getCurrentAngle());
+    ASSERT_EQ(NamedColors::TETROMINO_L, tetrL->getTetrominoColor());
+    ASSERT_FALSE(tetrL->getCurrentLocation().empty());
+    
+    int startingRow = tetrL->getStartingRow();
+    int startingCol = tetrL->getStartingCol();
 
-// Not working 
-//
+    std::vector<Point> tetrLStartingLocation = {
+        Point{startingRow, startingCol, NamedColors::TETROMINO_L},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_L},
+        Point{startingRow, startingCol + 2, NamedColors::TETROMINO_L},
+        Point{startingRow + 1, startingCol + 2, NamedColors::TETROMINO_L}
+    };
+
+    ASSERT_EQ(tetrLStartingLocation, tetrL->getCurrentLocation());
+
+    delete tetrL;
+}
+
+TEST(Tetromino_J_Creation, Tetromino)
+{
+    NewAbstractTetromino *tetrJ = new TetrominoJ();
+    
+    ASSERT_EQ(4, tetrJ->getTetrominoSize());
+    ASSERT_EQ(0, tetrJ->getCurrentAngle());
+    ASSERT_EQ(NamedColors::TETROMINO_J, tetrJ->getTetrominoColor());
+    ASSERT_FALSE(tetrJ->getCurrentLocation().empty());
+    
+    int startingRow = tetrJ->getStartingRow();
+    int startingCol = tetrJ->getStartingCol();
+
+    std::vector<Point> tetrJStartingLocation = {
+        Point{startingRow + 1, startingCol, NamedColors::TETROMINO_J},
+        Point{startingRow, startingCol, NamedColors::TETROMINO_J},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_J},
+        Point{startingRow, startingCol + 2, NamedColors::TETROMINO_J}
+    };
+
+    ASSERT_EQ(tetrJStartingLocation, tetrJ->getCurrentLocation());
+
+    delete tetrJ;
+}
+
+TEST(Tetromino_O_Creation, Tetromino)
+{
+    NewAbstractTetromino *tetrO = new TetrominoO();
+    
+    ASSERT_EQ(4, tetrO->getTetrominoSize());
+    ASSERT_EQ(0, tetrO->getCurrentAngle());
+    ASSERT_EQ(NamedColors::TETROMINO_O, tetrO->getTetrominoColor());
+    ASSERT_FALSE(tetrO->getCurrentLocation().empty());
+    
+    int startingRow = tetrO->getStartingRow();
+    int startingCol = tetrO->getStartingCol();
+
+    std::vector<Point> tetrOStartingLocation = {
+        Point{startingRow, startingCol, NamedColors::TETROMINO_O},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_O},
+        Point{startingRow + 1, startingCol, NamedColors::TETROMINO_O},
+        Point{startingRow + 1, startingCol + 1, NamedColors::TETROMINO_O}
+    };
+
+    ASSERT_EQ(tetrOStartingLocation, tetrO->getCurrentLocation());
+
+    delete tetrO;
+}
+
+TEST(Tetromino_Z_Creation, Tetromino)
+{
+    NewAbstractTetromino *tetrZ = new TetrominoZ();
+    
+    ASSERT_EQ(4, tetrZ->getTetrominoSize());
+    ASSERT_EQ(0, tetrZ->getCurrentAngle());
+    ASSERT_EQ(NamedColors::TETROMINO_Z, tetrZ->getTetrominoColor());
+    ASSERT_FALSE(tetrZ->getCurrentLocation().empty());
+    
+    int startingRow = tetrZ->getStartingRow();
+    int startingCol = tetrZ->getStartingCol();
+
+    std::vector<Point> tetrZStartingLocation = {
+        Point{startingRow, startingCol, NamedColors::TETROMINO_Z},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_Z},
+        Point{startingRow + 1, startingCol + 1, NamedColors::TETROMINO_Z},
+        Point{startingRow + 1, startingCol + 2, NamedColors::TETROMINO_Z}
+    };
+
+    ASSERT_EQ(tetrZStartingLocation, tetrZ->getCurrentLocation());
+
+    delete tetrZ;
+}
+
+TEST(Tetromino_S_Creation, Tetromino)
+{
+    NewAbstractTetromino *tetrS = new TetrominoS();
+    
+    ASSERT_EQ(4, tetrS->getTetrominoSize());
+    ASSERT_EQ(0, tetrS->getCurrentAngle());
+    ASSERT_EQ(NamedColors::TETROMINO_S, tetrS->getTetrominoColor());
+    ASSERT_FALSE(tetrS->getCurrentLocation().empty());
+    
+    int startingRow = tetrS->getStartingRow();
+    int startingCol = tetrS->getStartingCol();
+
+    std::vector<Point> tetrSStartingLocation = {
+        Point{startingRow + 1, startingCol, NamedColors::TETROMINO_S},
+        Point{startingRow + 1, startingCol + 1, NamedColors::TETROMINO_S},
+        Point{startingRow, startingCol + 1, NamedColors::TETROMINO_S},
+        Point{startingRow, startingCol + 2, NamedColors::TETROMINO_S}
+    };
+
+    ASSERT_EQ(tetrSStartingLocation, tetrS->getCurrentLocation());
+
+    delete tetrS;
+}
+
+// //Not working 
+
 // TEST(CLAPShortFunctionality, Parser)
 // {
 //     int argc = 4;
@@ -126,7 +245,7 @@ TEST(Tetromino_T_Creation, Tetromino)
 //     char shortArgv2[] = "-l p";
 //     char shortArgv3[] = "-r k";
 
-//     char *shortArgv[] = {programmName, shortArgv2, shortArgv3};
+//     char *shortArgv[] = {programmName, shortArgv1, shortArgv2, shortArgv3};
 
 //     Parser shortArgsParser;
 //     shortArgsParser.parseArguments(argc, shortArgv);
@@ -138,199 +257,192 @@ TEST(Tetromino_T_Creation, Tetromino)
 
 
 
-// TEST(Tetromino_I_Rotation, Tetromino)
-// {  
-//     NewAbstractTetromino *tetrI = new TetrominoI();
+TEST(Tetromino_I_Rotation, Tetromino)
+{  
+    NewAbstractTetromino *tetrI = new TetrominoI();
     
-//     //RIGHT ROTATION.
-//     std::vector<Point> locationBeforeRotationI = tetrI->getCurrentLocation();
-//     //0
-//     int angleBeforeRotationI = tetrI->getCurrentAngle();
+    //RIGHT ROTATION.
+    std::vector<Point> locationBeforeRotationI = tetrI->getCurrentLocation();
+    //0
+    int angleBeforeRotationI = tetrI->getCurrentAngle();
     
-//     tetrI->rotate(false);
+    tetrI->rotate(false);
     
-//     std::vector<Point> locationAfterRotationI = tetrI->getCurrentLocation();
-//     //90
-//     int angleAfterRotationI = tetrI->getCurrentAngle();
+    std::vector<Point> locationAfterRotationI = tetrI->getCurrentLocation();
+    //90
+    int angleAfterRotationI = tetrI->getCurrentAngle();
 
-//     ASSERT_EQ(angleBeforeRotationI + 90, angleAfterRotationI);
+    ASSERT_EQ(angleBeforeRotationI + 90, angleAfterRotationI);
     
-//     //Compare coordinates after rotation.
-//     ASSERT_EQ(locationBeforeRotationI[0].row - 2, locationAfterRotationI[0].row);
-//     ASSERT_EQ(locationBeforeRotationI[0].col + 2, locationAfterRotationI[0].col);
+    //Compare coordinates after rotation.
+    ASSERT_EQ(locationBeforeRotationI[0].row - 2, locationAfterRotationI[0].row);
+    ASSERT_EQ(locationBeforeRotationI[0].col + 2, locationAfterRotationI[0].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[1].row - 1, locationAfterRotationI[1].row);
-//     ASSERT_EQ(locationBeforeRotationI[1].col + 1, locationAfterRotationI[1].col);
+    ASSERT_EQ(locationBeforeRotationI[1].row - 1, locationAfterRotationI[1].row);
+    ASSERT_EQ(locationBeforeRotationI[1].col + 1, locationAfterRotationI[1].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[2].row, locationAfterRotationI[2].row);
-//     ASSERT_EQ(locationBeforeRotationI[2].col, locationAfterRotationI[2].col);
+    ASSERT_EQ(locationBeforeRotationI[2].row, locationAfterRotationI[2].row);
+    ASSERT_EQ(locationBeforeRotationI[2].col, locationAfterRotationI[2].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[3].row + 1, locationAfterRotationI[3].row);
-//     ASSERT_EQ(locationBeforeRotationI[3].col - 1, locationAfterRotationI[3].col);
+    ASSERT_EQ(locationBeforeRotationI[3].row + 1, locationAfterRotationI[3].row);
+    ASSERT_EQ(locationBeforeRotationI[3].col - 1, locationAfterRotationI[3].col);
 
-//    // After two more rotation we should land at the beggining.
-//     tetrI->rotate(false);
-//     tetrI->rotate(false);
+   // After two more rotation we should land at the beggining.
+    tetrI->rotate(false);
+    tetrI->rotate(false);
 
-//     std::vector<Point> locationAfterFullRotationCycleI =  tetrI->getCurrentLocation();
-//     int angleAfterFullRotationCycleI = tetrI->getCurrentAngle();
+    std::vector<Point> locationAfterFullRotationCycleI =  tetrI->getCurrentLocation();
+    int angleAfterFullRotationCycleI = tetrI->getCurrentAngle();
     
-//     ASSERT_EQ(angleBeforeRotationI, angleAfterFullRotationCycleI);
+    ASSERT_EQ(angleBeforeRotationI, angleAfterFullRotationCycleI);
 
-//     for(int i = 0; i < tetrI->getTetrominoSize(); i++)
-//     {
-//         ASSERT_EQ(locationBeforeRotationI[i].row, locationAfterFullRotationCycleI[i].row);
-//         ASSERT_EQ(locationBeforeRotationI[i].col, locationAfterFullRotationCycleI[i].col);
-//     }
+    for(int i = 0; i < tetrI->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(locationBeforeRotationI[i].row, locationAfterFullRotationCycleI[i].row);
+        ASSERT_EQ(locationBeforeRotationI[i].col, locationAfterFullRotationCycleI[i].col);
+    }
 
-//     //LEFT ROTATION
-//     //----------------------------------------------------------------------
+    //LEFT ROTATION
+    //----------------------------------------------------------------------
 
-//     locationBeforeRotationI = tetrI->getCurrentLocation();
-//     angleBeforeRotationI = tetrI->getCurrentAngle();
+    locationBeforeRotationI = tetrI->getCurrentLocation();
+    angleBeforeRotationI = tetrI->getCurrentAngle();
     
-//     tetrI->rotate(true);
+    tetrI->rotate(true);
     
-//     locationAfterRotationI = tetrI->getCurrentLocation();
+    locationAfterRotationI = tetrI->getCurrentLocation();
     
-//     angleAfterRotationI = tetrI->getCurrentAngle();
+    angleAfterRotationI = tetrI->getCurrentAngle();
 
-//     ASSERT_EQ(angleBeforeRotationI + 180, angleAfterRotationI);
+    ASSERT_EQ(angleBeforeRotationI + 180, angleAfterRotationI);
     
-//     //Compare coordinates after rotation.
-//     ASSERT_EQ(locationBeforeRotationI[0].row - 1, locationAfterRotationI[0].row);
-//     ASSERT_EQ(locationBeforeRotationI[0].col + 1, locationAfterRotationI[0].col);
+    //Compare coordinates after rotation.
+    ASSERT_EQ(locationBeforeRotationI[0].row - 1, locationAfterRotationI[0].row);
+    ASSERT_EQ(locationBeforeRotationI[0].col + 1, locationAfterRotationI[0].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[1].row - 1, locationAfterRotationI[1].row);
-//     ASSERT_EQ(locationBeforeRotationI[1].col + 1, locationAfterRotationI[1].col);
+    ASSERT_EQ(locationBeforeRotationI[1].row - 1, locationAfterRotationI[1].row);
+    ASSERT_EQ(locationBeforeRotationI[1].col + 1, locationAfterRotationI[1].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[2].row, locationAfterRotationI[2].row);
-//     ASSERT_EQ(locationBeforeRotationI[2].col - 1, locationAfterRotationI[2].col);
+    ASSERT_EQ(locationBeforeRotationI[2].row, locationAfterRotationI[2].row);
+    ASSERT_EQ(locationBeforeRotationI[2].col - 1, locationAfterRotationI[2].col);
 
-//     ASSERT_EQ(locationBeforeRotationI[3].row, locationAfterRotationI[3].row);
-//     ASSERT_EQ(locationBeforeRotationI[3].col - 1, locationAfterRotationI[3].col);
+    ASSERT_EQ(locationBeforeRotationI[3].row, locationAfterRotationI[3].row);
+    ASSERT_EQ(locationBeforeRotationI[3].col - 1, locationAfterRotationI[3].col);
 
-//     //After two more rotation we should land at the beggining.
-//     tetrI->rotate(true);
-//     tetrI->rotate(true);
+    //After two more rotation we should land at the beggining.
+    tetrI->rotate(true);
+    tetrI->rotate(true);
 
-//     locationAfterFullRotationCycleI =  tetrI->getCurrentLocation();
-//     angleAfterFullRotationCycleI = tetrI->getCurrentAngle();
+    locationAfterFullRotationCycleI =  tetrI->getCurrentLocation();
+    angleAfterFullRotationCycleI = tetrI->getCurrentAngle();
     
-//     ASSERT_EQ(angleBeforeRotationI, angleAfterFullRotationCycleI);
+    ASSERT_EQ(angleBeforeRotationI, angleAfterFullRotationCycleI);
 
-//     for(int i = 0; i < tetrI->getTetrominoSize(); i++)
-//     {
-//         ASSERT_EQ(locationBeforeRotationI[i].row, locationAfterFullRotationCycleI[i].row);
-//         ASSERT_EQ(locationBeforeRotationI[i].col, locationAfterFullRotationCycleI[i].col);
-//     }
+    for(int i = 0; i < tetrI->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(locationBeforeRotationI[i].row, locationAfterFullRotationCycleI[i].row);
+        ASSERT_EQ(locationBeforeRotationI[i].col, locationAfterFullRotationCycleI[i].col);
+    }
 
 
-//    delete tetrI;
-// }
+   delete tetrI;
+}
 
-// TEST(Tetromino_T_Rotation, Tetromino)
-// {    
-//     NewAbstractTetromino *tetrT = new TetrominoT();
+TEST(Tetromino_T_Rotation, Tetromino)
+{    
+    NewAbstractTetromino *tetrT = new TetrominoT();
 
-//     //RIGHT ROTATION
-//     //----------------------------------------------------------------------
+    //RIGHT ROTATION
+    //----------------------------------------------------------------------
 
-//     //Get values before 1 right rotation.
-//     std::vector<Point> locationBeforeRotation = tetrT->getCurrentLocation();
+    //Get values before 1 right rotation.
+    std::vector<Point> locationBeforeRotation = tetrT->getCurrentLocation();
     
-//     int angleBeforeRotation = tetrT->getCurrentAngle();
+    int angleBeforeRotation = tetrT->getCurrentAngle();
     
-//     tetrT->rotate(false);
-//     //Get values after 1 right rotation.
-//     std::vector<Point> locationAfterRotation = tetrT->getCurrentLocation();
-//     int angleAfterRotation = tetrT->getCurrentAngle();
+    tetrT->rotate(false);
+    //Get values after 1 right rotation.
+    std::vector<Point> locationAfterRotation = tetrT->getCurrentLocation();
+    int angleAfterRotation = tetrT->getCurrentAngle();
 
-//     //Compare angles and locations after 1 right rotation.
+    //Compare angles and locations after 1 right rotation.
 
-//     ASSERT_EQ(angleBeforeRotation + 90, angleAfterRotation);
+    ASSERT_EQ(angleBeforeRotation + 90, angleAfterRotation);
 
-//     ASSERT_EQ(locationBeforeRotation[0].row - 1, locationAfterRotation[0].row);
-//     ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
+    ASSERT_EQ(locationBeforeRotation[0].row - 1, locationAfterRotation[0].row);
+    ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
 
-//     ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
-//     ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
+    ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
+    ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
     
-//     ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
-//     ASSERT_EQ(locationBeforeRotation[2].col - 1, locationAfterRotation[2].col);
+    ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
+    ASSERT_EQ(locationBeforeRotation[2].col - 1, locationAfterRotation[2].col);
     
-//     ASSERT_EQ(locationBeforeRotation[3].row + 1, locationAfterRotation[3].row);
-//     ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
+    ASSERT_EQ(locationBeforeRotation[3].row + 1, locationAfterRotation[3].row);
+    ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
 
-//     //Perform 3 right rotations.
-//     tetrT->rotate(false);
-//     tetrT->rotate(false);
-//     tetrT->rotate(false);
+    //Perform 3 right rotations.
+    tetrT->rotate(false);
+    tetrT->rotate(false);
+    tetrT->rotate(false);
 
-//     //After 4 rotations we should have the same coordinates as before the rotations.
-//     std::vector<Point> locationAfterFullRotationCycle =  tetrT->getCurrentLocation();
-//     int angleAfterFullRotationCycle = tetrT->getCurrentAngle();
+    //After 4 rotations we should have the same coordinates as before the rotations.
+    std::vector<Point> locationAfterFullRotationCycle =  tetrT->getCurrentLocation();
+    int angleAfterFullRotationCycle = tetrT->getCurrentAngle();
     
-//     ASSERT_EQ(angleBeforeRotation, angleAfterFullRotationCycle);
+    ASSERT_EQ(angleBeforeRotation, angleAfterFullRotationCycle);
 
-//     for(int i = 0; i < tetrT->getTetrominoSize(); i++)
-//     {
-//         ASSERT_EQ(locationBeforeRotation[i].row, locationAfterFullRotationCycle[i].row);
-//         ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
-//     }
+    for(int i = 0; i < tetrT->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(locationBeforeRotation[i].row, locationAfterFullRotationCycle[i].row);
+        ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
+    }
 
-//     //LEFT ROTATION
-//     //----------------------------------------------------------------------
+    //LEFT ROTATION
+    //----------------------------------------------------------------------
 
-//     //Get values before 1 left rotation.
-//     locationBeforeRotation = tetrT->getCurrentLocation();
-//     angleBeforeRotation = tetrT->getCurrentAngle();
+    //Get values before 1 left rotation.
+    locationBeforeRotation = tetrT->getCurrentLocation();
+    angleBeforeRotation = tetrT->getCurrentAngle();
 
-//     tetrT->rotate(true);
+    tetrT->rotate(true);
 
-//     //Get values after 1 left rotation.
-//     locationAfterRotation = tetrT->getCurrentLocation();
-//     angleAfterRotation = tetrT->getCurrentAngle();
+    //Get values after 1 left rotation.
+    locationAfterRotation = tetrT->getCurrentLocation();
+    angleAfterRotation = tetrT->getCurrentAngle();
 
-//     //Compare angles. Because left rotation corresponds to counter-clockwise rotation
-//     //our current angle should be 270.
-//     ASSERT_EQ(angleBeforeRotation+270, angleAfterRotation);
+    //Compare angles. Because left rotation corresponds to counter-clockwise rotation
+    //our current angle should be 270.
+    ASSERT_EQ(angleBeforeRotation+270, angleAfterRotation);
 
-//     ASSERT_EQ(locationBeforeRotation[0].row + 1, locationAfterRotation[0].row);
-//     ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
+    ASSERT_EQ(locationBeforeRotation[0].row + 1, locationAfterRotation[0].row);
+    ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
 
-//     ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
-//     ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
+    ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
+    ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
     
-//     ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
-//     ASSERT_EQ(locationBeforeRotation[2].col + 1, locationAfterRotation[2].col);
+    ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
+    ASSERT_EQ(locationBeforeRotation[2].col + 1, locationAfterRotation[2].col);
     
-//     ASSERT_EQ(locationBeforeRotation[3].row - 1, locationAfterRotation[3].row);
-//     ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
+    ASSERT_EQ(locationBeforeRotation[3].row - 1, locationAfterRotation[3].row);
+    ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
 
-//     //Perform 3 left rotations.
-//     tetrT->rotate(true);    
-//     tetrT->rotate(true);    
-//     tetrT->rotate(true);    
+    //Perform 3 left rotations.
+    tetrT->rotate(true);    
+    tetrT->rotate(true);    
+    tetrT->rotate(true);    
 
-//     //After 4 rotations we should have the same coordinates as before the rotations.
-//     locationAfterFullRotationCycle =  tetrT->getCurrentLocation();
-//     angleAfterFullRotationCycle = tetrT->getCurrentAngle();
+    //After 4 rotations we should have the same coordinates as before the rotations.
+    locationAfterFullRotationCycle =  tetrT->getCurrentLocation();
+    angleAfterFullRotationCycle = tetrT->getCurrentAngle();
     
-//     ASSERT_EQ(angleBeforeRotation, angleAfterFullRotationCycle);
+    ASSERT_EQ(angleBeforeRotation, angleAfterFullRotationCycle);
 
-//     for(int i = 0; i < tetrT->getTetrominoSize(); i++)
-//     {
-//         ASSERT_EQ(locationBeforeRotation[i].row, locationAfterFullRotationCycle[i].row);
-//         ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
-//     }
+    for(int i = 0; i < tetrT->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(locationBeforeRotation[i].row, locationAfterFullRotationCycle[i].row);
+        ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
+    }
 
-//     delete tetrT;
-// }
-
-
-//Without this piece it runs fine.
-// TEST(T1, T2)
-// {
-//     ASSERT_EQ(1, 1);
-// }
+    delete tetrT;
+}
