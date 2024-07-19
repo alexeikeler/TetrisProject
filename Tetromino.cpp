@@ -54,7 +54,7 @@ TetrominoO::TetrominoO()
   // We don't need to rotate the cube, hence we don't need centerIndex
 }
 
-// We don't nned to rotate the cube
+// We don't need to rotate the cube
 void TetrominoO::rotate([[maybe_unused]] bool left)
 {
   return;

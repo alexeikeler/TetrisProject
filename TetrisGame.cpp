@@ -656,10 +656,6 @@ void TetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
     }
   }
 
-  else if(userInput.isKeyUp()){
-    currentTetromino->moveUp();
-  }
-
   // Return Tetromino to previous location if there is a collision
   //
   // To decide correct collision type we need additional information,
