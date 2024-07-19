@@ -56,8 +56,6 @@ int main(int argc, char **argv) {
   // Create color vector.
   std::vector<std::pair<Color, Color>> colorVector = createColorVector();
   
-  //std::cout << *argv << std::endl;
-
   // Create parser in order to parse arguments.
   Parser parser;
   parser.parseArguments(argc, argv);

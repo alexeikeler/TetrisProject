@@ -10,7 +10,7 @@ class Parser{
         // Print help
         void printHelp();
         // Method for parsing. Needs argc and **argv from main.
-        void parseArguments(int argc, char **argv);
+        void parseArguments(int argc, char **argv );
         
         // Get data after parsing arguments.
         int getLevel() {return level;}

@@ -26,6 +26,9 @@ class NewAbstractTetromino{
     int getTetrominoSize() const {return size_;};
     int getCurrentAngle() const {return currentAngle_;}
 
+    int getStartingRow() const {return startRow_;}
+    int getStartingCol() const {return startCol_;}
+
     // Setters
     void setCurrentLocation(std::vector<Point> location) {currentLocation_ = location;}
     void setCurrentAngle(int angle) {currentAngle_ = angle;}

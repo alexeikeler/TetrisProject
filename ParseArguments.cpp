@@ -23,7 +23,7 @@ void Parser::parseArguments(int argc, char **argv)
 {
     // This C-style string tells us that we have 4 arguments.
     // : means that we are awaiting for some values after l, r and b.
-    const char* const shortOptions = "l:r:b:h";
+    const char* const shortOptions = "b:l:r:h";
 
     // Short arguments are kind of cryptic, so I've decided to add long arguments.
     const option longOPtions[] = {
@@ -38,17 +38,16 @@ void Parser::parseArguments(int argc, char **argv)
     {
         // Get current
         const auto option = getopt_long(argc, argv, shortOptions, longOPtions, nullptr);
-
         // If option == -1 we have parsed everything        
         if(option == -1)
         {
             break;
         }
-
         switch (option)
         {
             case 'b':
                 level = std::stoi(optarg);
+                std::cout << level << std::endl; 
                 break;
             
             case 'l':
