@@ -9,6 +9,7 @@
 #include "./ParseArguments.h"
 #include <chrono>
 #include <thread>
+#include <algorithm>
 
 #include <gtest/gtest.h>
 #include <vector>
@@ -890,14 +891,41 @@ TEST(MockTetrisGameSimpleMovement, MockTetrisGame)
     ASSERT_EQ(angleBeforeRotation, angleAfterRotation);
     ASSERT_EQ(locationBeforeRotation, locationAfterRotation);
 
-    // Emulate collision with surface
-
-
     // Delete tetromino to avoid memory leaks.
     delete mtg.currentTetromino;
 }   
 
+TEST(MockTetrisGamePlacement, MockTetrisGame)
+{
+    MockTetrisGame mtg(0, 's', 'a');
+    UserInput moveDown;
+    moveDown.keycode_ = 258;
 
+    mtg.currentTetromino = new TetrominoI();
+    mtg.currentTetromino->rotate(false);
+
+    // Move down until collide
+    while(!mtg.isCurrentTetrominoPlaced)
+    {
+        mtg.decideAction(moveDown, false);
+    }
+
+    // By this point we should be colliding with surface.
+    ASSERT_EQ(Collision::Surface, mtg.lastCollision);
+    
+    // Points that form our currentTetromino should be gameField and surface.
+    for(auto point : mtg.currentTetromino->getCurrentLocation())
+    {
+        bool value = mtg.gameField[point];
+        auto it = std::find(mtg.surface.begin(), mtg.surface.end(), point);
+
+        ASSERT_TRUE(value);
+        ASSERT_TRUE(it != mtg.surface.end());
+    }
+
+    ASSERT_EQ(19, mtg.currentPoints);
+    
+}
 // --------------------------------------------------------------------------------------------------------------------
 // MockTetrisGame tests end
 // --------------------------------------------------------------------------------------------------------------------

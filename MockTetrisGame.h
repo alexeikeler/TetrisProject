@@ -9,7 +9,8 @@ class MockTetrisGame : public AbstractTetrisGame{
     public:
         // Instead of writing tons of getters I've decided to use friend test.
         friend class MockTetrisGameSimpleMovement_MockTetrisGame_Test;
-
+        friend class MockTetrisGamePlacement_MockTetrisGame_Test;
+        
         MockTetrisGame(int level, char rrk, char lrk);
         ~MockTetrisGame() {};
         void play() override;
@@ -18,11 +19,8 @@ class MockTetrisGame : public AbstractTetrisGame{
         void placeTetromino() override;
         void reshapeGameField() override;
 
-
-
-
-
     private:
         bool isGameOver = false;
-
+        Collision lastCollision = Collision::Nothing;
+        bool isCurrentTetrominoPlaced = false;
 };

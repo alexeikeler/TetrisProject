@@ -62,6 +62,8 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
   std::vector<Point> previousLocation = currentTetromino->getCurrentLocation();
   int previousAngle = currentTetromino->getCurrentAngle();
 
+  // We will need this variable for testing.
+  isCurrentTetrominoPlaced = false;    
   
   if (userInput.isLeftRotationKey(leftRotationKey)) {
     currentTetromino->rotate(true);
@@ -110,6 +112,9 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
     previousLocation);
   
 
+  // We will need this variable for testing.
+  lastCollision = collision;
+
   if(collision == Collision::Surface)
   {
 
@@ -140,8 +145,8 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
     // Reset earned points
     earnedPoints = 0;
 
-    // If we have a collision with floor tetromino dies
-    currentTetromino = nullptr;
+    isCurrentTetrominoPlaced = true;
+
     return;
   }
 
