@@ -902,7 +902,7 @@ TEST(MockTetrisGamePlacement, MockTetrisGame)
     moveDown.keycode_ = 258;
 
     mtg.currentTetromino = new TetrominoI();
-    mtg.currentTetromino->rotate(false);
+    //mtg.currentTetromino->rotate(false);
 
     // Move down until collide
     while(!mtg.isCurrentTetrominoPlaced)
@@ -924,6 +924,8 @@ TEST(MockTetrisGamePlacement, MockTetrisGame)
     }
 
     ASSERT_EQ(19, mtg.currentPoints);
+
+    delete mtg.currentTetromino;
     
 }
 // --------------------------------------------------------------------------------------------------------------------

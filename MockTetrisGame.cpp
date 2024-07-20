@@ -140,6 +140,7 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
     }
 
     // Update score before next tetromino appears
+    currentPoints -= 1;
     updateScore();
 
     // Reset earned points
