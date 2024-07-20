@@ -22,18 +22,23 @@ public:
   void drawLevelText();
   // Speed depends from level, so we might as well update it in the same function.
   void updateLevelAndSpeed(int increaseLevelBy=0);
+  void updateLevelAndSpeedText();
 
   // Name of the function tells exactly what it does.
   // --------------------------------------------
   void drawScoreText();
   void updateScore();
+  void updateScoreText();
 
   void drawDestroyedLinesText();
-  void updateDestroyedLines();
+  //void updateDestroyedLines();
+  void updateDestroyedLinesText();
 
   void drawStatistics();
   void updateStatistics(int tetrominoIndex);
+  void updateStatisticsText(int tetrominoIndex);
   
+
   void drawNextTetrominoText();
   void drawNextTetromino(int tetrominoIndex);
 

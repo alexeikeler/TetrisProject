@@ -15,26 +15,35 @@ enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor, GameOver};
 
 class AbstractTetrisGame{
     public:
+
         virtual ~AbstractTetrisGame() = default;
 
         // Methods for updating data.
         void updateLevelAndSpeed(int increaseLevelBy=0);
         void updateDestroyedLines();
-        void updateStatistics();
+        void updateStatistics(int tetrominoIndex);
+        void updateScore();
 
         // Main game loop.
-        void play();
-        
+        // Should be implemented separetly by
+        // MockTetrisGame and TetrisGame.
+        virtual void play() = 0;
+        virtual void gameOver() = 0;
+
         // Game logic.
-        void decideAction(UserInput userInput, bool isAritificialMovement);
-        void placeTetromino();
+        // Should be implemented separetly by
+        // MockTetrsGame and TetrisGame.
+        virtual void decideAction(UserInput userInput, bool isAritificialMovement) = 0;
+        virtual void placeTetromino() = 0;
         Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
         void updateSurface();
-        void reshapeGameField();
-        NewAbstractTetromino* chooseTetromino(const int randomNumber);
+        // Should be implemented separetly by
+        // MockTetrsGame and TetrisGame.
+        virtual void reshapeGameField() = 0;
+        NewAbstractTetromino* chooseTetromino(int randomNumber);
         
         // Calculations.
-        void generateRandomNumber(int a, int b);
+        int generateRandomNumber(int a, int b);
         void generateCurrentAndNext(int a = 0, int b = 6);
         std::string intToString(int number, int maxLength);
 

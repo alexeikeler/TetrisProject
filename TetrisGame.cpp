@@ -27,6 +27,7 @@ TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
   drawGameField();
   drawLevelText();
   updateLevelAndSpeed();
+  updateLevelAndSpeedText();
   drawScoreText();
   drawNextTetrominoText();
   drawStatistics();
@@ -221,6 +222,7 @@ void TetrisGame::play() {
 
     // Update stats
     updateStatistics(current);
+    updateStatisticsText(current);
 
     // Avoid memory leaks
     delete currentTetromino;
@@ -695,11 +697,22 @@ void TetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
     // Remove full rows
     reshapeGameField();
 
-    // Update number of destroyed lines
-    updateDestroyedLines();
+
+    // Update number of destroyed lines and leve if needed
+    div_t divresult = std::div(destroyedLines, 10);
+    if(divresult.quot > previousQuotient)
+    {
+      updateLevelAndSpeed(1);
+      updateLevelAndSpeedText();
+      previousQuotient = divresult.quot;
+    }
+
+    updateDestroyedLinesText();
+
 
     // Update score before next tetromino appears
     updateScore();
+    updateScoreText();
 
     // Reset earned points
     earnedPoints = 0;
@@ -718,7 +731,6 @@ void TetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
   else if(collision == Collision::Roof)
   {
     tm_->drawString(10, 0, 0, "In roof!");
-    gameOver();
   }
 
 
@@ -843,7 +855,19 @@ void TetrisGame::updateStatistics(int tetrominoIndex)
   // in the statistics table (We are starting from bottom). 
   // Second argument is column of that tetromino shifted by 6.
   // Such shifting allows us to overwrite current score.
-  tm_->drawString(
+
+  // Should be separated
+  // tm_->drawString(
+  //   statisticsRowEnd - (tetrominoIndex) * 3, 
+  //   statisticsColStart + 6, 
+  //   (int)NamedColors::WHITE, 
+  //   intToString(statistics[tetrominoIndex], 3).c_str()
+  // );
+}
+
+void TetrisGame::updateStatisticsText(int tetrominoIndex)
+{
+   tm_->drawString(
     statisticsRowEnd - (tetrominoIndex) * 3, 
     statisticsColStart + 6, 
     (int)NamedColors::WHITE, 
@@ -856,19 +880,26 @@ void TetrisGame::drawDestroyedLinesText()
   tm_->drawString(linesRow, linesCol, (int)NamedColors::WHITE, "LINES - 000");
 }
 
-void TetrisGame::updateDestroyedLines()
-{
+// void TetrisGame::updateDestroyedLines()
+// {
 
-  // Get quotient and remainder. If quotient > previousQuotient,
-  // then we have enough points for the next level.
-  div_t divresult = std::div(destroyedLines, 10);
-  if(divresult.quot > previousQuotient)
-  {
-    updateLevelAndSpeed(1);
-    previousQuotient = divresult.quot;
-  }
+//   // Get quotient and remainder. If quotient > previousQuotient,
+//   // then we have enough points for the next level.
+//   div_t divresult = std::div(destroyedLines, 10);
+//   if(divresult.quot > previousQuotient)
+//   {
+//     updateLevelAndSpeed(1);
+//     updateLevelAndSpeedText();
+//     previousQuotient = divresult.quot;
+//   }
   
-  tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, intToString(destroyedLines, 3).c_str());
+//   // Should be separated
+//   // tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, intToString(destroyedLines, 3).c_str());
+// }
+
+void TetrisGame::updateDestroyedLinesText()
+{
+   tm_->drawString(linesRow, linesCol+4 , (int)NamedColors::WHITE, intToString(destroyedLines, 3).c_str()); 
 }
 
 void TetrisGame::drawLevelText()
@@ -889,6 +920,12 @@ void TetrisGame::updateLevelAndSpeed(int increaseLevelBy)
     currentSpeed = fallingSpeed[maxLevel];
   }
 
+  // Should be separated
+  // tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, intToString(currentLevel, 3).c_str());
+}
+
+void TetrisGame::updateLevelAndSpeedText()
+{
   tm_->drawString(levelRow, levelCol + 4, (int)NamedColors::WHITE, intToString(currentLevel, 3).c_str());
 }
 
@@ -900,7 +937,13 @@ void TetrisGame::drawScoreText()
 void TetrisGame::updateScore()
 {
   currentPoints += earnedPoints;
-  tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, intToString(currentPoints, 6).c_str());
+  // Should be separated.
+  // tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, intToString(currentPoints, 6).c_str());
+}
+
+void TetrisGame::updateScoreText()
+{
+  tm_->drawString(scoreRow, scoreCol + 4, (int)NamedColors::WHITE, intToString(currentPoints, 6).c_str());  
 }
 
 std::string TetrisGame::intToString(int number, int maxLength)
