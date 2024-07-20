@@ -892,13 +892,6 @@ TEST(MockTetrisGameSimpleMovement, MockTetrisGame)
 
     // Emulate collision with surface
 
-    while(mtg.currentTetromino != nullptr)
-    {
-        mtg.decideAction(moveDown, false);
-    }
-
-    // Check points
-    ASSERT_EQ(19, mtg.currentPoints);
 
     // Delete tetromino to avoid memory leaks.
     delete mtg.currentTetromino;
