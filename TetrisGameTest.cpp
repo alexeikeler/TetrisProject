@@ -549,4 +549,5 @@ TEST(Tetromino_O_Rotation, Tetromino)
 
     ASSERT_EQ(locationBeforeRotation, locationAfterRotation);
     
+    delete tetrO;
 }
