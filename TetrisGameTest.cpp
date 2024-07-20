@@ -598,3 +598,50 @@ TEST(Tetromino_S_Rotation, Tetromino)
 
     delete tetrS;
 }
+
+TEST(Tetromino_Z_Rotation, Tetromino)
+{
+        NewAbstractTetromino *tetrZ = new TetrominoS();
+    
+    
+    std::vector<Point> locationBeforeRotation = tetrZ->getCurrentLocation();
+    int angleBeforeRotation = tetrZ->getCurrentAngle();
+
+    tetrZ->rotate(false);
+
+    std::vector<Point> locationAfterRotation = tetrZ->getCurrentLocation();
+    int angleAfterRotation = tetrZ->getCurrentAngle();
+
+    ASSERT_EQ(angleBeforeRotation + 90, angleAfterRotation);
+
+    ASSERT_EQ(locationBeforeRotation[0].row - 1, locationAfterRotation[0].row);
+    ASSERT_EQ(locationBeforeRotation[0].col + 2, locationAfterRotation[0].col);
+
+    ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
+    ASSERT_EQ(locationBeforeRotation[1].col + 1, locationAfterRotation[1].col);
+
+    ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
+    ASSERT_EQ(locationBeforeRotation[2].col, locationAfterRotation[2].col);
+
+    ASSERT_EQ(locationBeforeRotation[3].row, locationAfterRotation[3].row);
+    ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
+    
+    //Perform 1 right rotations.
+    tetrZ->rotate(false);
+    
+    //After 2 rotations we should have the same coordinates as before the rotations.
+    std::vector<Point> locationAfterFullRotationCycle = tetrZ->getCurrentLocation();
+    int angleAfterFullRotationCycle = tetrZ->getCurrentAngle();
+
+    ASSERT_EQ(angleBeforeRotation, angleAfterFullRotationCycle);
+
+    for(int i = 0; i < tetrZ->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(locationBeforeRotation[i].row, locationAfterFullRotationCycle[i].row);
+        ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
+    }
+
+    // Left rotation is the same as the right rotation.
+
+    delete tetrZ;
+}
