@@ -70,7 +70,7 @@ class AbstractTetrisGame{
 
         int previousQuotient;
         int destroyedLines;
-        int currentLevel;
+        int currentLevel = 0;
 
         int earnedPoints = 0;
         int currentPoints = 0;
