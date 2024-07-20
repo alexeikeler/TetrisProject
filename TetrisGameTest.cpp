@@ -534,3 +534,19 @@ TEST(Tetromino_L_Rotation, Tetromino)
 
     delete tetrL;   
 }
+
+TEST(Tetromino_O_Rotation, Tetromino)
+{
+    NewAbstractTetromino *tetrO = new TetrominoO();
+    std::vector<Point> locationBeforeRotation = tetrO->getCurrentLocation();
+
+    tetrO->rotate(false);
+    tetrO->rotate(true);
+
+    // Since cube doesn't acually rotate we don't need to test anything else.
+
+    std::vector<Point> locationAfterRotation = tetrO->getCurrentLocation();
+
+    ASSERT_EQ(locationBeforeRotation, locationAfterRotation);
+    
+}
