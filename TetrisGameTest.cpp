@@ -7,6 +7,8 @@
 #include "./MockTetrisGame.h"
 #include "./Point.h"
 #include "./ParseArguments.h"
+#include <chrono>
+#include <thread>
 
 #include <gtest/gtest.h>
 #include <vector>
@@ -760,6 +762,7 @@ TEST(MockTetrisGameTests, MockTetrisGame)
     int level = 5;
     char rrk = 'x';
     char lrk = 'z';
+    UserInput userInput;
 
     MockTetrisGame mtg(level, rrk, lrk);
 
@@ -809,6 +812,25 @@ TEST(MockTetrisGameTests, MockTetrisGame)
     // Check if our tetromino was created succsessfully
     ASSERT_TRUE(mtg.currentTetromino != nullptr);
 
+    // Assign "down keycode" to emulate moving down.
+    userInput.keycode_ = 258;
+    // After this our tetromino should be 4 rows below it's starting position.
+    // Nothing should collide.
+    // Tetromino shouldn't be placed yet.
+    std::vector<Point> positionBeforeMovingDown = mtg.currentTetromino->getCurrentLocation();
+    
+    mtg.decideAction(userInput, false);
+    mtg.decideAction(userInput, false);
+    mtg.decideAction(userInput, false);
+    mtg.decideAction(userInput, false);
+
+    std::vector<Point> positionAfterMovingDown = mtg.currentTetromino->getCurrentLocation();
+
+    for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(positionBeforeMovingDown[i].row + 4, positionBeforeMovingDown[i].row);
+        ASSERT_EQ(positionBeforeMovingDown[i].col, positionBeforeMovingDown[i].col);
+    }
 
 
 
