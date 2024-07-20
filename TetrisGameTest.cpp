@@ -571,10 +571,10 @@ TEST(Tetromino_S_Rotation, Tetromino)
     ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
 
     ASSERT_EQ(locationBeforeRotation[1].row - 1, locationAfterRotation[1].row);
-    ASSERT_EQ(locationBeforeRotation[1].col + 1, locationAfterRotation[1].col);
+    ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
 
     ASSERT_EQ(locationBeforeRotation[2].row, locationAfterRotation[2].row);
-    ASSERT_EQ(locationBeforeRotation[2].col, locationAfterRotation[2].col);
+    ASSERT_EQ(locationBeforeRotation[2].col+1, locationAfterRotation[2].col);
 
     ASSERT_EQ(locationBeforeRotation[3].row + 1, locationAfterRotation[3].row);
     ASSERT_EQ(locationBeforeRotation[3].col, locationAfterRotation[3].col);
