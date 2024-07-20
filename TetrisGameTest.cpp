@@ -601,7 +601,7 @@ TEST(Tetromino_S_Rotation, Tetromino)
 
 TEST(Tetromino_Z_Rotation, Tetromino)
 {
-        NewAbstractTetromino *tetrZ = new TetrominoS();
+     NewAbstractTetromino *tetrZ = new TetrominoZ();
     
     
     std::vector<Point> locationBeforeRotation = tetrZ->getCurrentLocation();
