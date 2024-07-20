@@ -8,9 +8,7 @@ MockTetrisGame::MockTetrisGame(int level, char rrk, char lrk)
 {
     // Mostly the same as the usual TetrisGame class
     // except for the drawing methods.
-    std::cout << "Recieved level: " << level << std::endl;
     currentLevel += level;
-    std::cout << "Current level: " << currentLevel << std::endl;
 
     rightRotationKey = rrk;
     leftRotationKey = lrk;

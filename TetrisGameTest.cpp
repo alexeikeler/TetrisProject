@@ -766,6 +766,9 @@ TEST(MockTetrisGameTests, MockTetrisGame)
     ASSERT_EQ(5, mtg.currentLevel);
     ASSERT_EQ('x', mtg.rightRotationKey);
     ASSERT_EQ('z', mtg.leftRotationKey);
+    // Our current speed should be equal to the falling speed from the
+    // fifth level. (383 ms)
+    ASSERT_EQ(mtg.currentSpeed, mtg.fallingSpeed[mtg.currentLevel]);
     
     ASSERT_FALSE(mtg.isGameOver);
 
@@ -778,6 +781,44 @@ TEST(MockTetrisGameTests, MockTetrisGame)
     ASSERT_FALSE(mtg.pointsForRemovedRows.empty());
     
     
+    // Initially all points should have false in gameField
+    for(int i = mtg.offset_row; i < mtg.offset_row + mtg.rows_; i++)
+    {
+        for(int j = mtg.offset_col; j < mtg.offset_col + mtg.cols_; j++)
+        {
+            bool isAlive = mtg.gameField[Point{i, j, NamedColors::BLACK}];
+            ASSERT_FALSE(isAlive);
+        }
+    }
+
+    // Now we can create tetrominos and test game logic.
+
+    // Generate some random numbers
+    mtg.generateCurrentAndNext();
+    
+    // Check if our random numbers are different.
+    ASSERT_FALSE(mtg.currentRandomNumber == mtg.nextRandomNumber);
+    
+    // Check if they are in the correct range.
+    ASSERT_TRUE(mtg.currentRandomNumber >= 0 && mtg.currentRandomNumber <= 6);
+    ASSERT_TRUE(mtg.nextRandomNumber >= 0 && mtg.nextRandomNumber <= 6);
+    
+    // Generate tetromino
+    mtg.currentTetromino = mtg.chooseTetromino(mtg.currentRandomNumber);
+
+    // Check if our tetromino was created succsessfully
+    ASSERT_TRUE(mtg.currentTetromino != nullptr);
+
+
+
+
+
+
+
+
+
+    // Delete tetromino to avoid memory leaks.
+    delete mtg.currentTetromino;
 }   
 
 
