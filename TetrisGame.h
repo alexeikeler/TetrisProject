@@ -2,6 +2,7 @@
 // Code snippets from the lectures where used
 
 #pragma once
+#include "AbstractTetrisGame.h"
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
 #include <unordered_map>
@@ -9,7 +10,6 @@
 #include <set>
 #include <functional>
 
-enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor, GameOver};
 
 class TetrisGame {
 public:
