@@ -828,8 +828,8 @@ TEST(MockTetrisGameTests, MockTetrisGame)
 
     for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
     {
-        ASSERT_EQ(positionBeforeMovingDown[i].row + 4, positionBeforeMovingDown[i].row);
-        ASSERT_EQ(positionBeforeMovingDown[i].col, positionBeforeMovingDown[i].col);
+        ASSERT_EQ(positionBeforeMovingDown[i].row + 4, positionAfterMovingDown[i].row);
+        ASSERT_EQ(positionBeforeMovingDown[i].col, positionAfterMovingDown[i].col);
     }
 
 
