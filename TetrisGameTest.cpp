@@ -4,6 +4,7 @@
 #include "./Tetromino.h"
 #include "./AbstractTetromino.h"
 #include "./MockTerminalManager.h"
+#include "./MockTetrisGame.h"
 #include "./Point.h"
 #include "./ParseArguments.h"
 
@@ -747,4 +748,39 @@ TEST(Tetromino_J_Rotation, Tetromino)
 
 // --------------------------------------------------------------------------------------------------------------------
 // Rotation tests end
+// --------------------------------------------------------------------------------------------------------------------
+
+
+// --------------------------------------------------------------------------------------------------------------------
+// MockTetrisGame tests start
+// --------------------------------------------------------------------------------------------------------------------
+
+TEST(MockTetrisGameTests, MockTetrisGame)
+{
+    int level = 5;
+    char rrk = 'x';
+    char lrk = 'z';
+
+    MockTetrisGame mtg(level, rrk, lrk);
+
+    ASSERT_EQ(5, mtg.currentLevel);
+    ASSERT_EQ('x', mtg.rightRotationKey);
+    ASSERT_EQ('z', mtg.leftRotationKey);
+    
+    ASSERT_FALSE(mtg.isGameOver);
+
+    ASSERT_TRUE(mtg.deque.empty());
+    
+    ASSERT_FALSE(mtg.gameField.empty());
+    ASSERT_FALSE(mtg.surface.empty());
+    ASSERT_FALSE(mtg.fallingSpeed.empty());
+    ASSERT_FALSE(mtg.statistics.empty());
+    ASSERT_FALSE(mtg.pointsForRemovedRows.empty());
+    
+    
+}   
+
+
+// --------------------------------------------------------------------------------------------------------------------
+// MockTetrisGame tests end
 // --------------------------------------------------------------------------------------------------------------------

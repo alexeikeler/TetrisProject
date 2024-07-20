@@ -47,7 +47,7 @@ class AbstractTetrisGame{
         void generateCurrentAndNext(int a = 0, int b = 6);
         std::string intToString(int number, int maxLength);
 
-    private:
+    protected:
 
         NewAbstractTetromino *currentTetromino;
         

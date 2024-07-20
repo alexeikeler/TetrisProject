@@ -734,8 +734,6 @@ void TetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
   }
 
 
-  // Check if there are any tetrominos on the roof row.
-  // If so it's game over.
   removeTetrominoFromScreen(previousLocation);
   drawTetromino();
 }

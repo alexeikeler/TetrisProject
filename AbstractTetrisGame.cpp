@@ -1,3 +1,6 @@
+// Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
+// Code snippets from the lectures where used
+
 #include "./AbstractTetrisGame.h"
 #include "./Tetromino.h"
 #include <chrono>
