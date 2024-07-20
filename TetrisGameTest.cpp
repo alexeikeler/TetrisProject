@@ -757,18 +757,34 @@ TEST(Tetromino_J_Rotation, Tetromino)
 // MockTetrisGame tests start
 // --------------------------------------------------------------------------------------------------------------------
 
-TEST(MockTetrisGameTests, MockTetrisGame)
+TEST(MockTetrisGameSimpleMovement, MockTetrisGame)
 {
     int level = 5;
     char rrk = 'x';
     char lrk = 'z';
-    UserInput userInput;
+    
+    UserInput moveDown;
+    moveDown.keycode_ = 258;
+
+    UserInput moveRight;
+    moveRight.keycode_ = 261;
+
+    UserInput moveLeft;
+    moveLeft.keycode_ = 260;
+
+    UserInput rotateLeft;
+    rotateLeft.keycode_ = lrk;
+
+    UserInput rotateRight;
+    rotateRight.keycode_ = rrk;
+
 
     MockTetrisGame mtg(level, rrk, lrk);
 
     ASSERT_EQ(5, mtg.currentLevel);
     ASSERT_EQ('x', mtg.rightRotationKey);
     ASSERT_EQ('z', mtg.leftRotationKey);
+    
     // Our current speed should be equal to the falling speed from the
     // fifth level. (383 ms)
     ASSERT_EQ(mtg.currentSpeed, mtg.fallingSpeed[mtg.currentLevel]);
@@ -813,31 +829,76 @@ TEST(MockTetrisGameTests, MockTetrisGame)
     ASSERT_TRUE(mtg.currentTetromino != nullptr);
 
     // Assign "down keycode" to emulate moving down.
-    userInput.keycode_ = 258;
     // After this our tetromino should be 4 rows below it's starting position.
     // Nothing should collide.
     // Tetromino shouldn't be placed yet.
-    std::vector<Point> positionBeforeMovingDown = mtg.currentTetromino->getCurrentLocation();
+    std::vector<Point> positionBeforeMoving = mtg.currentTetromino->getCurrentLocation();
     
-    mtg.decideAction(userInput, false);
-    mtg.decideAction(userInput, false);
-    mtg.decideAction(userInput, false);
-    mtg.decideAction(userInput, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
 
-    std::vector<Point> positionAfterMovingDown = mtg.currentTetromino->getCurrentLocation();
+    std::vector<Point> positionAfterMoving = mtg.currentTetromino->getCurrentLocation();
 
     for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
     {
-        ASSERT_EQ(positionBeforeMovingDown[i].row + 4, positionAfterMovingDown[i].row);
-        ASSERT_EQ(positionBeforeMovingDown[i].col, positionAfterMovingDown[i].col);
+        ASSERT_EQ(positionBeforeMoving[i].row + 4, positionAfterMoving[i].row);
+        ASSERT_EQ(positionBeforeMoving[i].col, positionAfterMoving[i].col);
+    }
+    
+
+    // Emulate movement
+
+    positionBeforeMoving = mtg.currentTetromino->getCurrentLocation();
+
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveRight, false);
+    mtg.decideAction(moveRight, false);
+    mtg.decideAction(moveDown, false);
+    
+    positionAfterMoving = mtg.currentTetromino->getCurrentLocation();
+
+    // Check new coordinates
+
+    for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(positionBeforeMoving[i].row + 2, positionAfterMoving[i].row);
+        ASSERT_EQ(positionBeforeMoving[i].col + 1, positionAfterMoving[i].col);
+    }
+    
+    // Emulate rotation.
+    
+    // If everything is correct we should land at the same position as before the rotations.
+    std::vector<Point> locationBeforeRotation = mtg.currentTetromino->getCurrentLocation();
+    int angleBeforeRotation = mtg.currentTetromino->getCurrentAngle();
+
+    mtg.decideAction(rotateLeft, false);
+    mtg.decideAction(rotateLeft, false);
+    mtg.decideAction(rotateLeft, false);
+    mtg.decideAction(rotateLeft, false);
+
+    mtg.decideAction(rotateRight, false);
+    mtg.decideAction(rotateRight, false);
+    mtg.decideAction(rotateRight, false);
+    mtg.decideAction(rotateRight, false);
+    
+    std::vector<Point> locationAfterRotation = mtg.currentTetromino->getCurrentLocation();
+    int angleAfterRotation = mtg.currentTetromino->getCurrentAngle();
+
+    ASSERT_EQ(angleBeforeRotation, angleAfterRotation);
+    ASSERT_EQ(locationBeforeRotation, locationAfterRotation);
+
+    // Emulate collision with surface
+
+    while(mtg.currentTetromino != nullptr)
+    {
+        mtg.decideAction(moveDown, false);
     }
 
-
-
-
-
-
-
+    // Check points
+    ASSERT_EQ(20, mtg.currentPoints);
 
     // Delete tetromino to avoid memory leaks.
     delete mtg.currentTetromino;
