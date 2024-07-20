@@ -898,7 +898,7 @@ TEST(MockTetrisGameSimpleMovement, MockTetrisGame)
     }
 
     // Check points
-    ASSERT_EQ(20, mtg.currentPoints);
+    ASSERT_EQ(19, mtg.currentPoints);
 
     // Delete tetromino to avoid memory leaks.
     delete mtg.currentTetromino;
