@@ -447,9 +447,11 @@ TEST(Tetromino_T_Rotation, Tetromino)
     delete tetrT;
 }
 
+
 TEST(Tetromino_L_Rotation, Tetromino)
 {
     NewAbstractTetromino *tetrL = new TetrominoL();
+
     std::vector<Point> locationBeforeRotation = tetrL->getCurrentLocation();
     int angleBeforeRotation = tetrL->getCurrentAngle();
 
@@ -460,17 +462,17 @@ TEST(Tetromino_L_Rotation, Tetromino)
 
     ASSERT_EQ(angleBeforeRotation + 90, angleAfterRotation);
 
-    ASSERT_EQ(locationBeforeRotation[0].row - 2, locationAfterRotation[0].row);
-    ASSERT_EQ(locationBeforeRotation[0].col, locationAfterRotation[0].col);
+    ASSERT_EQ(locationBeforeRotation[0].row - 1, locationAfterRotation[0].row);
+    ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
 
-    ASSERT_EQ(locationBeforeRotation[1].row - 1, locationAfterRotation[1].row);
-    ASSERT_EQ(locationBeforeRotation[1].col + 1, locationAfterRotation[1].col);
+    ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
+    ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
 
-    ASSERT_EQ(locationBeforeRotation[2].row, locationAfterRotation[2].row);
-    ASSERT_EQ(locationBeforeRotation[2].col, locationAfterRotation[2].col);
+    ASSERT_EQ(locationBeforeRotation[2].row + 1, locationAfterRotation[2].row);
+    ASSERT_EQ(locationBeforeRotation[2].col - 1, locationAfterRotation[2].col);
 
-    ASSERT_EQ(locationBeforeRotation[3].row + 1, locationAfterRotation[3].row);
-    ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
+    ASSERT_EQ(locationBeforeRotation[3].row, locationAfterRotation[3].row);
+    ASSERT_EQ(locationBeforeRotation[3].col - 2, locationAfterRotation[3].col);
     
     //Perform 3 right rotations.
     tetrL->rotate(false);
@@ -503,17 +505,17 @@ TEST(Tetromino_L_Rotation, Tetromino)
     ASSERT_EQ(angleBeforeRotation + 270, angleAfterRotation);
 
 
-    ASSERT_EQ(locationBeforeRotation[0].row, locationAfterRotation[0].row);
-    ASSERT_EQ(locationBeforeRotation[0].col + 2, locationAfterRotation[0].col);
+    ASSERT_EQ(locationBeforeRotation[0].row + 1, locationAfterRotation[0].row);
+    ASSERT_EQ(locationBeforeRotation[0].col + 1, locationAfterRotation[0].col);
 
-    ASSERT_EQ(locationBeforeRotation[1].row + 1, locationAfterRotation[1].row);
-    ASSERT_EQ(locationBeforeRotation[1].col + 2, locationAfterRotation[1].col);
+    ASSERT_EQ(locationBeforeRotation[1].row, locationAfterRotation[1].row);
+    ASSERT_EQ(locationBeforeRotation[1].col, locationAfterRotation[1].col);
 
-    ASSERT_EQ(locationBeforeRotation[2].row, locationAfterRotation[2].row);
-    ASSERT_EQ(locationBeforeRotation[2].col, locationAfterRotation[2].col);
+    ASSERT_EQ(locationBeforeRotation[2].row - 1, locationAfterRotation[2].row);
+    ASSERT_EQ(locationBeforeRotation[2].col - 1, locationAfterRotation[2].col);
 
-    ASSERT_EQ(locationBeforeRotation[3].row - 1, locationAfterRotation[3].row);
-    ASSERT_EQ(locationBeforeRotation[3].col - 1, locationAfterRotation[3].col);
+    ASSERT_EQ(locationBeforeRotation[3].row - 2, locationAfterRotation[3].row);
+    ASSERT_EQ(locationBeforeRotation[3].col, locationAfterRotation[3].col);
     
     tetrL->rotate(true);
     tetrL->rotate(true);
@@ -530,5 +532,5 @@ TEST(Tetromino_L_Rotation, Tetromino)
         ASSERT_EQ(locationBeforeRotation[i].col, locationAfterFullRotationCycle[i].col);
     }
 
-    
+    delete tetrL;   
 }
