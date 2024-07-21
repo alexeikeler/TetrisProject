@@ -938,16 +938,18 @@ TEST(MockTetrisGameIsGameOver, MockTetrisGame)
     
     mtg.currentTetromino = new TetrominoJ();
     // Place some blocks.
-    for(int i = mtg.offset_col; i < mtg.offset_col + mtg.cols_; i++)
+
+    for(int j = mtg.offset_col + 2; j < mtg.offset_col + mtg.cols_ - 2; j++)
     {
-        mtg.gameField[Point{15, i, NamedColors::TETROMINO_I}];
+        mtg.gameField[Point{17, j, NamedColors::TETROMINO_I}] = true;
+        mtg.surface.insert(Point{17, j, NamedColors::TETROMINO_I});
+
     }
 
     // Now the game should end because our current tetromino will connect with
     // other tetromino and at the same time it will be touching the "roof".
 
     mtg.decideAction(moveDown, false);
-
     ASSERT_TRUE(mtg.isGameOver);
 
     delete mtg.currentTetromino;
