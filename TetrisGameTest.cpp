@@ -1015,11 +1015,18 @@ TEST(MockTetrisGameCollision, MockTetrisGame)
     mtg.decideAction(rotateLeft, false);
     mtg.decideAction(moveRight, false);
 
-    ASSERT_EQ(beforeCollisionWithBlock, mtg.currentTetromino->getCurrentLocation());
+    std::vector<Point> afterCollisionWithBlock = mtg.currentTetromino->getCurrentLocation();
+    int angleAfterCollisionWithBlock = mtg.currentTetromino->getCurrentAngle();
+
     ASSERT_EQ(angleBeforeCollisionWithBlock, mtg.currentTetromino->getCurrentAngle());
 
-    // Our last collision should be Collision::Block
-
+    for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
+    {
+        ASSERT_EQ(beforeCollisionWithBlock[i].row, afterCollisionWithBlock[i].row);
+        ASSERT_EQ(beforeCollisionWithBlock[i].col, afterCollisionWithBlock[i].col);
+    }
+    
+    // Our last collision should be Collision::Blocks
     ASSERT_EQ(mtg.lastCollision, Collision::Block);
 
 
