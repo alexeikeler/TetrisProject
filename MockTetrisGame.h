@@ -11,6 +11,7 @@ class MockTetrisGame : public AbstractTetrisGame{
         friend class MockTetrisGameSimpleMovement_MockTetrisGame_Test;
         friend class MockTetrisGamePlacement_MockTetrisGame_Test;
         friend class MockTetrisGameIsGameOver_MockTetrisGame_Test;
+        friend class MockTetrisGameCollision_MockTetrisGame_Test;
         
         MockTetrisGame(int level, char rrk, char lrk);
         ~MockTetrisGame() {};

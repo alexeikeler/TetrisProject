@@ -937,8 +937,8 @@ TEST(MockTetrisGameIsGameOver, MockTetrisGame)
     moveDown.keycode_ = 258;
     
     mtg.currentTetromino = new TetrominoT();
-    // Place some blocks.
-
+    
+    // Place some blocks on the 16-th row.
     for(int j = mtg.offset_col + 2; j < mtg.offset_col + mtg.cols_ - 2; j++)
     {
         mtg.gameField[Point{16, j, NamedColors::TETROMINO_I}] = true;
@@ -951,6 +951,77 @@ TEST(MockTetrisGameIsGameOver, MockTetrisGame)
 
     mtg.decideAction(moveDown, false);
     ASSERT_TRUE(mtg.isGameOver);
+
+    delete mtg.currentTetromino;
+}
+
+TEST(MockTetrisGameCollision, MockTetrisGame)
+{
+    int level = 0;
+    char rrk = 's';
+    char lrk = 'a';
+    
+    UserInput moveDown;
+    moveDown.keycode_ = 258;
+
+    UserInput moveRight;
+    moveRight.keycode_ = 261;
+
+    UserInput moveLeft;
+    moveLeft.keycode_ = 260;
+
+    UserInput rotateLeft;
+    rotateLeft.keycode_ = lrk;
+
+    UserInput rotateRight;
+    rotateRight.keycode_ = rrk;
+
+    MockTetrisGame mtg(level, rrk, lrk);
+    
+    // Create and place points to test collision.
+    Point p0 = Point{19, 45, NamedColors::TETROMINO_I};
+    Point p1 = Point{20, 45, NamedColors::TETROMINO_I};
+    Point p2 = Point{20, 46, NamedColors::TETROMINO_I};
+    Point p3 = Point{20, 47, NamedColors::TETROMINO_I};
+    Point p4 = Point{20, 48, NamedColors::TETROMINO_I};
+    Point p5 = Point{19, 48, NamedColors::TETROMINO_I};
+
+    std::vector<Point> points = {p0, p1, p2, p3, p4, p5};
+    
+    for(auto point : points)
+    {
+      mtg.gameField[point] = true;
+      mtg.surface.insert(point);
+    }
+
+    mtg.currentTetromino = new TetrominoL();
+    // 3 left 4 down
+
+    // Move tetromino into position to test collision.
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveLeft, false);
+
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
+    mtg.decideAction(moveDown, false);
+
+    // We should have the same coordinates as before the movement, because we should collide
+    // with block and don't move.
+    std::vector<Point> beforeCollisionWithBlock = mtg.currentTetromino->getCurrentLocation();
+    int angleBeforeCollisionWithBlock = mtg.currentTetromino->getCurrentAngle();
+
+    mtg.decideAction(rotateLeft, false);
+    mtg.decideAction(moveRight, false);
+
+    ASSERT_EQ(beforeCollisionWithBlock, mtg.currentTetromino->getCurrentLocation());
+    ASSERT_EQ(angleBeforeCollisionWithBlock, mtg.currentTetromino->getCurrentAngle());
+
+    // Our last collision should be Collision::Block
+
+    ASSERT_EQ(mtg.lastCollision, Collision::Block);
+
 
     delete mtg.currentTetromino;
 }

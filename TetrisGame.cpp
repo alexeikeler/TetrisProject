@@ -47,7 +47,25 @@ TetrisGame::TetrisGame(TerminalManager *tm, int level, char rrk, char lrk) {
       }
     }
 
+    Point p0 = Point{19, 45, NamedColors::TETROMINO_I};
+    
+    Point p1 = Point{20, 45, NamedColors::TETROMINO_I};
+    Point p2 = Point{20, 46, NamedColors::TETROMINO_I};
+    Point p3 = Point{20, 47, NamedColors::TETROMINO_I};
+    Point p4 = Point{20, 48, NamedColors::TETROMINO_I};
+    
+    Point p5 = Point{19, 48, NamedColors::TETROMINO_I};
 
+    std::vector<Point> temppoints= {p0, p1, p2, p3, p4, p5};;
+    
+    for(auto point : temppoints)
+    {
+      gameField[point] = true;
+      surface.insert(point);
+      tm_->drawPixel(point.row, point.col,(int)point.color);
+
+    }    
+        
   // Create shapes for "Next" tetromino box.
   for(int i = 0; i < numberOfTetrominos; i++)
   {
