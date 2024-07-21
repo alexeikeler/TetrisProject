@@ -936,13 +936,13 @@ TEST(MockTetrisGameIsGameOver, MockTetrisGame)
     UserInput moveDown;
     moveDown.keycode_ = 258;
     
-    mtg.currentTetromino = new TetrominoJ();
+    mtg.currentTetromino = new TetrominoT();
     // Place some blocks.
 
     for(int j = mtg.offset_col + 2; j < mtg.offset_col + mtg.cols_ - 2; j++)
     {
-        mtg.gameField[Point{17, j, NamedColors::TETROMINO_I}] = true;
-        mtg.surface.insert(Point{17, j, NamedColors::TETROMINO_I});
+        mtg.gameField[Point{16, j, NamedColors::TETROMINO_I}] = true;
+        mtg.surface.insert(Point{16, j, NamedColors::TETROMINO_I});
 
     }
 
