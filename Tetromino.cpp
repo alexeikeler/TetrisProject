@@ -7,33 +7,28 @@
 #include <string>
 
 // For the most part we only need to define constructors. The structure of the
-// inherited abstract class will do the rest. However some of the tetrominos (O, I, Z, S)
-// do require custom rotation.
+// inherited abstract class will do the rest. However some of the tetrominos (O,
+// I, Z, S) do require custom rotation.
 // ------------------------------------------------------------------------
-TetrominoT::TetrominoT()
-{
+TetrominoT::TetrominoT() {
   color_ = NamedColors::TETROMINO_T;
   startRow_ = 15;
   startCol_ = 45;
-  
+
   TetrominoShape::createTShape(startRow_, startCol_, &currentLocation_, color_);
   centerIndex = 1;
-
 }
 // ------------------------------------------------------------------------
-TetrominoL::TetrominoL()
-{
+TetrominoL::TetrominoL() {
   color_ = NamedColors::TETROMINO_L;
   startRow_ = 15;
   startCol_ = 45;
-  
+
   TetrominoShape::createLShape(startRow_, startCol_, &currentLocation_, color_);
   centerIndex = 1;
-
 }
 // ------------------------------------------------------------------------
-TetrominoJ::TetrominoJ()
-{
+TetrominoJ::TetrominoJ() {
   color_ = NamedColors::TETROMINO_J;
   startRow_ = 15;
   startCol_ = 45;
@@ -43,8 +38,7 @@ TetrominoJ::TetrominoJ()
   centerIndex = 2;
 }
 // ------------------------------------------------------------------------
-TetrominoO::TetrominoO()
-{
+TetrominoO::TetrominoO() {
   color_ = NamedColors::TETROMINO_O;
   startRow_ = 15;
   startCol_ = 45;
@@ -55,39 +49,30 @@ TetrominoO::TetrominoO()
 }
 
 // We don't need to rotate the cube
-void TetrominoO::rotate([[maybe_unused]] bool left)
-{
-  return;
-}
+void TetrominoO::rotate([[maybe_unused]] bool left) { return; }
 // ------------------------------------------------------------------------
 
-TetrominoI::TetrominoI()
-{
+TetrominoI::TetrominoI() {
   color_ = NamedColors::TETROMINO_I;
   startRow_ = 15;
   startCol_ = 44;
-  
+
   TetrominoShape::createIShape(startRow_, startCol_, &currentLocation_, color_);
 
   centerIndex = 2;
-
 }
 
 // We need to modify standart rotation to be able to fold and unfold
 // this tetromino.
-void TetrominoI::rotate(bool left)
-{
+void TetrominoI::rotate(bool left) {
   // I to cube
-  if(currentAngle_ == 90 && !left)
-  {
+  if (currentAngle_ == 90 && !left) {
     currentLocation_[0].col -= 1;
     currentLocation_[0].row += 1;
     currentLocation_[2].col -= 1;
     currentLocation_[3].row -= 1;
     currentAngle_ += 90;
-  }
-  else if(currentAngle_ == 180 && !left)
-  {
+  } else if (currentAngle_ == 180 && !left) {
 
     // cube to ____
     currentLocation_[2].col += 2;
@@ -107,9 +92,7 @@ void TetrominoI::rotate(bool left)
       currentLocation_[i].row += 1;
     }
     currentAngle_ = 0;
-  }
-  else if(currentAngle_ == 0 && left)
-  {
+  } else if (currentAngle_ == 0 && left) {
 
     //   // From ---- to cube
     currentLocation_[0].row -= 1;
@@ -122,26 +105,21 @@ void TetrominoI::rotate(bool left)
 
     currentLocation_[3].col -= 1;
 
-    currentAngle_  = 180;
-  }
-  else if(currentAngle_ == 180 && left)
-  {
+    currentAngle_ = 180;
+  } else if (currentAngle_ == 180 && left) {
     // From cube to I
     currentLocation_[0].col += 1;
     currentLocation_[0].row -= 1;
     currentLocation_[2].col += 1;
     currentLocation_[3].row += 1;
     currentAngle_ -= 90;
-  }
-  else
-  {
+  } else {
     NewAbstractTetromino::rotate(left);
   }
 }
 // ------------------------------------------------------------------------
 
-TetrominoZ::TetrominoZ()
-{
+TetrominoZ::TetrominoZ() {
   color_ = NamedColors::TETROMINO_Z;
   startRow_ = 15;
   startCol_ = 45;
@@ -149,22 +127,19 @@ TetrominoZ::TetrominoZ()
   TetrominoShape::createZShape(startRow_, startCol_, &currentLocation_, color_);
 
   centerIndex = 2;
-  
 }
 
-void TetrominoZ::rotate([[maybe_unused]] bool left)
-{
+void TetrominoZ::rotate([[maybe_unused]] bool left) {
   // We have only two unique positions.
   // Custom rotation needed becase Tetromizo S doesn't work
   // 100% correct with natural rotation.
 
   // Rotate by 90 degrees.
 
-  if(currentAngle_ == 0)
-  {
+  if (currentAngle_ == 0) {
     currentLocation_[0].row -= 1;
     currentLocation_[0].col += 2;
-    
+
     currentLocation_[1].col += 1;
 
     currentLocation_[2].row -= 1;
@@ -173,13 +148,12 @@ void TetrominoZ::rotate([[maybe_unused]] bool left)
 
     currentAngle_ += 90;
   }
-  
+
   // Rotate by 90 degrees.
-  else if(currentAngle_ == 90)
-  {
+  else if (currentAngle_ == 90) {
     currentLocation_[0].row += 1;
     currentLocation_[0].col -= 2;
-    
+
     currentLocation_[1].col -= 1;
 
     currentLocation_[2].row += 1;
@@ -192,25 +166,21 @@ void TetrominoZ::rotate([[maybe_unused]] bool left)
 
 // ------------------------------------------------------------------------
 
-TetrominoS::TetrominoS()
-{
+TetrominoS::TetrominoS() {
   color_ = NamedColors::TETROMINO_S;
   startRow_ = 15;
   startCol_ = 45;
 
   TetrominoShape::createSShape(startRow_, startCol_, &currentLocation_, color_);
-  
 }
 
-void TetrominoS::rotate([[maybe_unused]] bool left)
-{
+void TetrominoS::rotate([[maybe_unused]] bool left) {
   // We have only two unique positions.
   // Custom rotation needed becase Tetromizo S doesn't work
   // 100% correct with natural rotation.
 
   // Rotate by 90 degrees.
-  if(currentAngle_ == 0)
-  {
+  if (currentAngle_ == 0) {
     currentLocation_[0].row -= 2;
     currentLocation_[0].col += 1;
 
@@ -218,12 +188,11 @@ void TetrominoS::rotate([[maybe_unused]] bool left)
     currentLocation_[2].col += 1;
 
     currentLocation_[3].row += 1;
-    
+
     currentAngle_ += 90;
   }
   // Rotate by 90 degrees.
-  else if(currentAngle_ == 90)
-  {
+  else if (currentAngle_ == 90) {
     currentLocation_[0].row += 2;
     currentLocation_[0].col -= 1;
 

@@ -15,7 +15,7 @@ TESTLIBS = -lgtest -lgtest_main -lpthread
 OBJECTS = $(addsuffix .o, $(basename $(filter-out %Main.cpp %Test.cpp, $(wildcard *.cpp))))
 
 
-all: compile #test #checkstyle
+all: compile test checkstyle
 
 compile: $(MAIN_BINARIES) $(TEST_BINARIES)
 

@@ -4,45 +4,35 @@
 #include "./MockTetrisGame.h"
 #include <iostream>
 
-MockTetrisGame::MockTetrisGame(int level, char rrk, char lrk)
-{
-    // Mostly the same as the usual TetrisGame class
-    // except for the drawing methods.
-    currentLevel += level;
+MockTetrisGame::MockTetrisGame(int level, char rrk, char lrk) {
+  // Mostly the same as the usual TetrisGame class
+  // except for the drawing methods.
+  currentLevel += level;
 
-    rightRotationKey = rrk;
-    leftRotationKey = lrk;
+  rightRotationKey = rrk;
+  leftRotationKey = lrk;
 
-    updateLevelAndSpeed();
-    updateSurface();
+  updateLevelAndSpeed();
+  updateSurface();
 
-    for(int i = offset_row; i < offset_row + rows_; i++)
-    {
-        for(int j = offset_col; j < offset_col + cols_; j++)
-        {
-            gameField[Point{i, j, NamedColors::BLACK}] = false;
-        }
+  for (int i = offset_row; i < offset_row + rows_; i++) {
+    for (int j = offset_col; j < offset_col + cols_; j++) {
+      gameField[Point{i, j, NamedColors::BLACK}] = false;
     }
+  }
 }
 
-void MockTetrisGame::play()
-{
-    // We will "emulate" playing in tests.
+void MockTetrisGame::play() {
+  // We will "emulate" playing in tests.
 }
 
-void MockTetrisGame::gameOver()
-{
-    isGameOver = true;
-}
+void MockTetrisGame::gameOver() { isGameOver = true; }
 
-void MockTetrisGame::placeTetromino()
-{
-  for(auto point : currentTetromino->getCurrentLocation())
-  {
+void MockTetrisGame::placeTetromino() {
+  for (auto point : currentTetromino->getCurrentLocation()) {
     // If we are trying to place a tetromino
     // on the roof level it's game over.
-    if(point.row == offset_row+1)
-    {
+    if (point.row == offset_row + 1) {
       gameOver();
     }
 
@@ -52,10 +42,11 @@ void MockTetrisGame::placeTetromino()
     gameField.insert(std::pair(point, true));
   }
 
-    isCurrentTetrominoPlaced = false;
+  isCurrentTetrominoPlaced = false;
 }
 
-void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {
+void MockTetrisGame::decideAction(UserInput userInput,
+                                  bool isArtificialMovement) {
 
   // Same as in the TetrisGame, but without drawing.
 
@@ -65,30 +56,29 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
   int previousAngle = currentTetromino->getCurrentAngle();
 
   // We will need this variable for testing.
-  isCurrentTetrominoPlaced = false;    
-  
+  isCurrentTetrominoPlaced = false;
+
   if (userInput.isLeftRotationKey(leftRotationKey)) {
     currentTetromino->rotate(true);
   }
 
-   else if (userInput.isRightRotationKey(rightRotationKey)) {
+  else if (userInput.isRightRotationKey(rightRotationKey)) {
     currentTetromino->rotate(false);
   }
 
   if (userInput.isKeyLeft()) {
     currentTetromino->moveLeft();
-  } 
-  
+  }
+
   else if (userInput.isKeyRight()) {
     currentTetromino->moveRight();
-  } 
+  }
 
   else if (userInput.isKeyDown()) {
     currentTetromino->moveDown();
     // Add additional point for moving down faster.
     // We are counting only movement from player.
-    if(!isArtificialMovement)
-    {
+    if (!isArtificialMovement) {
       earnedPoints += 1;
     }
   }
@@ -104,39 +94,33 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
   //     *
   // ____*______
   // (1234 is current figure) If we press -> then the 2 will collide with
-  // current "surface" (see .h for exact information about surface points) point,
-  // which will result in wrong collision.
+  // current "surface" (see .h for exact information about surface points)
+  // point, which will result in wrong collision.
 
   Collision collision = isColliding(
-    userInput.isKeyDown(), 
-    userInput.isLeftRotationKey(leftRotationKey), 
-    userInput.isRightRotationKey(rightRotationKey), 
-    previousLocation);
-  
+      userInput.isKeyDown(), userInput.isLeftRotationKey(leftRotationKey),
+      userInput.isRightRotationKey(rightRotationKey), previousLocation);
 
   // We will need this variable for testing.
   lastCollision = collision;
 
-  if(collision == Collision::Surface)
-  {
+  if (collision == Collision::Surface) {
 
     currentTetromino->setCurrentLocation(previousLocation);
     currentTetromino->setCurrentAngle(previousAngle);
 
     // Place the tetromino in "logical" screen
-    placeTetromino(); 
-    
+    placeTetromino();
+
     // Update surface to find prepare for new possible collisions
     updateSurface();
 
     // Remove full rows
     reshapeGameField();
 
-
     // Update number of destroyed lines and leve if needed
     div_t divresult = std::div(destroyedLines, 10);
-    if(divresult.quot > previousQuotient)
-    {
+    if (divresult.quot > previousQuotient) {
       updateLevelAndSpeed(1);
       previousQuotient = divresult.quot;
     }
@@ -153,66 +137,56 @@ void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement
     return;
   }
 
-  else if(collision == Collision::Wall || collision == Collision::Block)
-  {
+  else if (collision == Collision::Wall || collision == Collision::Block) {
     currentTetromino->setCurrentLocation(previousLocation);
     currentTetromino->setCurrentAngle(previousAngle);
   }
-
 }
 
-void MockTetrisGame::reshapeGameField()
-{
+void MockTetrisGame::reshapeGameField() {
 
   // Mostly the same as the usual TetrisGame class
   // except for the drawing methods.
-  
+
   // Variable to store number of alive points per line
   int acc = 0;
 
   // vector with lines index
   std::vector<int> rowsToRemove;
-  
+
   // Go through every line
-  for(int i = offset_row; i < offset_row + rows_; i++)
-  {
+  for (int i = offset_row; i < offset_row + rows_; i++) {
     acc = 0;
 
-    for(int j = offset_col + 1; j < offset_col + cols_; j++)
-    {
+    for (int j = offset_col + 1; j < offset_col + cols_; j++) {
       acc += gameField[Point{i, j, NamedColors::BLACK}];
     }
-    
+
     // If this holds, then line is full and we need to remove it
     // (- 1 because of the border, we don't want to count it)
-    if(acc == cols_ - 1)
-    {
+    if (acc == cols_ - 1) {
       rowsToRemove.push_back(i);
     }
-
   }
 
   // Nothing to remove
-  if(rowsToRemove.empty())
-  {
+  if (rowsToRemove.empty()) {
     return;
   }
 
   destroyedLines += rowsToRemove.size();
-  earnedPoints += ((currentLevel + 1) * pointsForRemovedRows[rowsToRemove.size()]);
+  earnedPoints +=
+      ((currentLevel + 1) * pointsForRemovedRows[rowsToRemove.size()]);
 
-  // Remove all points from collected rows 
-  for(int row : rowsToRemove)
-  {
+  // Remove all points from collected rows
+  for (int row : rowsToRemove) {
 
     // Remove point everywhere
-    for(int j = offset_col + 1; j < offset_col + cols_; j++)
-    {
+    for (int j = offset_col + 1; j < offset_col + cols_; j++) {
       Point pointToRemove = Point{row, j, NamedColors::BLACK};
 
       auto it = std::find(surface.begin(), surface.end(), pointToRemove);
-      if(it != surface.end())
-      {
+      if (it != surface.end()) {
         surface.erase(it);
       }
 
@@ -221,19 +195,16 @@ void MockTetrisGame::reshapeGameField()
   }
   bool flag = false;
 
-  //Now we need to move all drawn the points that are above the lines to be deleted
+  // Now we need to move all drawn the points that are above the lines to be
+  // deleted
 
-  for(int row : rowsToRemove)
-  {
-    for(int i = row; i > offset_row; i--)
-    {
-      for(int j = offset_col + 1; j < offset_col + cols_; j++)
-      {
+  for (int row : rowsToRemove) {
+    for (int i = row; i > offset_row; i--) {
+      for (int j = offset_col + 1; j < offset_col + cols_; j++) {
         // Point currentPoint = Point{i, j, NamedColors::BLACK};
         Point currentPoint = Point{i, j, NamedColors::BLACK};
-        // If point is drawn 
-        if(gameField[currentPoint])
-        {
+        // If point is drawn
+        if (gameField[currentPoint]) {
           auto pointInGameField = gameField.find(currentPoint);
 
           // Set it to false
@@ -241,26 +212,24 @@ void MockTetrisGame::reshapeGameField()
           // Immitates "falling"
 
           // Remove current point from screen
-          
+
           // Remove current point from surface set. We need to do this
-          // to avoid false collisions. We also need flag variable to know for sure,
-          // that we have deleted the point.
+          // to avoid false collisions. We also need flag variable to know for
+          // sure, that we have deleted the point.
           auto it = std::find(surface.begin(), surface.end(), currentPoint);
-          if(it != surface.end())
-          {
+          if (it != surface.end()) {
             flag = true;
             surface.erase(it);
           }
 
           // Move point one row down
           currentPoint.row += 1;
-          
+
           currentPoint.color = pointInGameField->first.color;
-          
-          // Put point with new coordinates back in surface set. This will provide correct
-          // collision
-          if(flag)
-          {
+
+          // Put point with new coordinates back in surface set. This will
+          // provide correct collision
+          if (flag) {
             surface.insert(currentPoint);
           }
 
@@ -272,6 +241,4 @@ void MockTetrisGame::reshapeGameField()
       }
     }
   }
-
-
 }

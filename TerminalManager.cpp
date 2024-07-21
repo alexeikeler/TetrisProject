@@ -21,8 +21,12 @@ bool UserInput::isMouseclick() const { return mouseRow_ != -1; }
 bool UserInput::isKeyA() const { return keycode_ == 'a'; }
 bool UserInput::isKeyS() const { return keycode_ == 's'; }
 
-bool UserInput::isRightRotationKey(char rightRotationKey) const {return keycode_ == rightRotationKey;}
-bool UserInput::isLeftRotationKey(char leftRotationKey) const {return keycode_ == leftRotationKey;}
+bool UserInput::isRightRotationKey(char rightRotationKey) const {
+  return keycode_ == rightRotationKey;
+}
+bool UserInput::isLeftRotationKey(char leftRotationKey) const {
+  return keycode_ == leftRotationKey;
+}
 
 // ____________________________________________________________________________
 TerminalManager::TerminalManager(

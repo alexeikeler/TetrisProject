@@ -4,163 +4,124 @@
 #pragma once
 
 #include "./AbstractTetromino.h"
-#include "./TerminalManager.h"
 #include "./Point.h"
-#include <vector>
-#include <unordered_map>
+#include "./TerminalManager.h"
 #include <deque>
-#include <set>
 #include <functional>
+#include <set>
+#include <unordered_map>
+#include <vector>
 
+enum class Collision { Roof, Wall, Block, Nothing, Surface, Floor, GameOver };
 
-enum class Collision {Roof, Wall, Block, Nothing, Surface, Floor, GameOver};
+class AbstractTetrisGame {
+public:
+  virtual ~AbstractTetrisGame() = default;
 
+  // Methods for updating data.
+  void updateLevelAndSpeed(int increaseLevelBy = 0);
+  void updateDestroyedLines();
+  void updateStatistics(int tetrominoIndex);
+  void updateScore();
 
-class AbstractTetrisGame{
-    public:
+  // Main game loop.
+  // Should be implemented separetly by
+  // MockTetrisGame and TetrisGame.
+  virtual void play() = 0;
 
-        virtual ~AbstractTetrisGame() = default;
+  // Game over.
+  // Should be implemented separetly by
+  // MockTetrisGame and TetrisGame.
+  virtual void gameOver() = 0;
 
-        // Methods for updating data.
-        void updateLevelAndSpeed(int increaseLevelBy=0);
-        void updateDestroyedLines();
-        void updateStatistics(int tetrominoIndex);
-        void updateScore();
+  // Game logic.
+  // Should be implemented separetly by
+  // MockTetrsGame and TetrisGame.
+  virtual void decideAction(UserInput userInput,
+                            bool isAritificialMovement) = 0;
+  virtual void placeTetromino() = 0;
 
-        // Main game loop.
-        // Should be implemented separetly by
-        // MockTetrisGame and TetrisGame.
-        virtual void play() = 0;
+  Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation,
+                        std::vector<Point> previousLocation);
+  void updateSurface();
+  // Should be implemented separetly by
+  // MockTetrsGame and TetrisGame.
+  virtual void reshapeGameField() = 0;
 
-        // Game over.
-        // Should be implemented separetly by
-        // MockTetrisGame and TetrisGame.
-        virtual void gameOver() = 0;
+  // Simple method for choosing new Tetromino based
+  // on generated random numbers.
+  NewAbstractTetromino *chooseTetromino(int randomNumber);
 
-        // Game logic.
-        // Should be implemented separetly by
-        // MockTetrsGame and TetrisGame.
-        virtual void decideAction(UserInput userInput, bool isAritificialMovement) = 0;
-        virtual void placeTetromino() = 0;
+  // Calculations.
+  int generateRandomNumber(int a, int b);
+  void generateCurrentAndNext(int a = 0, int b = 6);
+  std::string intToString(int number, int maxLength);
 
-        Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
-        void updateSurface();
-        // Should be implemented separetly by
-        // MockTetrsGame and TetrisGame.
-        virtual void reshapeGameField() = 0;
+protected:
+  NewAbstractTetromino *currentTetromino;
 
-        // Simple method for choosing new Tetromino based
-        // on generated random numbers.
-        NewAbstractTetromino* chooseTetromino(int randomNumber);
-        
-        // Calculations.
-        int generateRandomNumber(int a, int b);
-        void generateCurrentAndNext(int a = 0, int b = 6);
-        std::string intToString(int number, int maxLength);
+  const int numberOfTetrominos = 7;
+  const int rows_ = 21;
+  const int cols_ = 11;
+  const int offset_row = 14;
+  const int offset_col = 40;
+  const int maxLevel = 29;
+  const int gameOverTimeoutMs = 1'500;
 
-    protected:
+  // Speed of the tetrominos (in ms.)
+  int currentSpeed;
 
-        NewAbstractTetromino *currentTetromino;
-        
-        const int numberOfTetrominos = 7;
-        const int rows_ = 21;
-        const int cols_ = 11;
-        const int offset_row = 14;
-        const int offset_col = 40;
-        const int maxLevel = 29;
-        const int gameOverTimeoutMs = 1'500;
+  // Variables to store rundom numbers, based on which
+  // we will create current and next tetrominos.
+  int previousRandomNumber;
+  int currentRandomNumber;
+  int nextRandomNumber;
 
-        // Speed of the tetrominos (in ms.)
-        int currentSpeed;
-        
-        // Variables to store rundom numbers, based on which
-        // we will create current and next tetrominos.
-        int previousRandomNumber;
-        int currentRandomNumber;
-        int nextRandomNumber;
-        
-        // Keys for rotation.
-        char leftRotationKey;
-        char rightRotationKey;
+  // Keys for rotation.
+  char leftRotationKey;
+  char rightRotationKey;
 
-        // Level and destroyed lines. We will
-        // use qutient and remainder to for
-        // the level update.
-        int previousQuotient = 0;
-        int destroyedLines = 0;
-        int currentLevel = 0;
+  // Level and destroyed lines. We will
+  // use qutient and remainder to for
+  // the level update.
+  int previousQuotient = 0;
+  int destroyedLines = 0;
+  int currentLevel = 0;
 
-        // Points.
-        int earnedPoints = 0;
-        int currentPoints = 0;
+  // Points.
+  int earnedPoints = 0;
+  int currentPoints = 0;
 
-        // I've chosen a deque data structure to manipulate
-        // current and next tetromino, because we will need to 
-        // use both of them in one game cycle. And in next game cycle 
-        // current "next" will become "current".
-        std::deque<int> deque;
+  // I've chosen a deque data structure to manipulate
+  // current and next tetromino, because we will need to
+  // use both of them in one game cycle. And in next game cycle
+  // current "next" will become "current".
+  std::deque<int> deque;
 
-        // Game field where placed tetrominos (points) will be stored.
-        std::unordered_map<Point, bool> gameField;
-        // A set with points which will form surface of the game.
-        //In other words, this set contains points after collision with which 
-        // the current figure dies and the new one starts its cycle.
-        std::set<Point> surface;
+  // Game field where placed tetrominos (points) will be stored.
+  std::unordered_map<Point, bool> gameField;
+  // A set with points which will form surface of the game.
+  // In other words, this set contains points after collision with which
+  // the current figure dies and the new one starts its cycle.
+  std::set<Point> surface;
 
-        // Falling speed. It's a bit misleading that it's in ms, but I've
-        // found such a representation rather conviniet.
-        // See TetrisGame play() for more details.
-        std::unordered_map<int, int> fallingSpeed = {
-                {0, 800},
-                {1, 716},
-                {2, 633},
-                {3, 550},
-                {4, 466},
-                {5, 383},
-                {6, 300},
-                {7, 216},
-                {8, 133},
-                {9, 100},
-                {10, 83},
-                {11, 83},
-                {12, 83},
-                {13, 66},
-                {14, 66},
-                {15, 66},
-                {16, 50},
-                {17, 50},
-                {18, 50},
-                {19, 33},
-                {20, 33},
-                {21, 33},
-                {22, 33},
-                {23, 33},
-                {24, 33},
-                {25, 33},
-                {26, 33},
-                {27, 33},
-                {28, 33},
-                {29, 16},
-        };
+  // Falling speed. It's a bit misleading that it's in ms, but I've
+  // found such a representation rather conviniet.
+  // See TetrisGame play() for more details.
+  std::unordered_map<int, int> fallingSpeed = {
+      {0, 800}, {1, 716}, {2, 633}, {3, 550}, {4, 466}, {5, 383},
+      {6, 300}, {7, 216}, {8, 133}, {9, 100}, {10, 83}, {11, 83},
+      {12, 83}, {13, 66}, {14, 66}, {15, 66}, {16, 50}, {17, 50},
+      {18, 50}, {19, 33}, {20, 33}, {21, 33}, {22, 33}, {23, 33},
+      {24, 33}, {25, 33}, {26, 33}, {27, 33}, {28, 33}, {29, 16},
+  };
 
-    // Map with statistics of the placed tetrominos.
-    std::unordered_map<int, int> statistics = {
-        {0, 0},
-        {1, 0},
-        {2, 0},
-        {3, 0},
-        {4, 0},
-        {5, 0},
-        {6, 0}
-    };
+  // Map with statistics of the placed tetrominos.
+  std::unordered_map<int, int> statistics = {{0, 0}, {1, 0}, {2, 0}, {3, 0},
+                                             {4, 0}, {5, 0}, {6, 0}};
 
   // Map with points for the number of destroyed lines.
   // Helps to avoid if-else code.
   std::unordered_map<int, int> pointsForRemovedRows = {
-    {1, 40},
-    {2, 100},
-    {3, 300},
-    {4, 1200}
-  };
-
-};  
+      {1, 40}, {2, 100}, {3, 300}, {4, 1200}};
+};

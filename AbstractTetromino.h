@@ -4,50 +4,51 @@
 #pragma once
 
 #include "./Point.h"
-#include <vector>
 #include <cmath>
+#include <vector>
 
-class NewAbstractTetromino{
-  public:
-    
-    virtual ~NewAbstractTetromino() = default;
+class NewAbstractTetromino {
+public:
+  virtual ~NewAbstractTetromino() = default;
 
-    void moveLeft();
-    void moveRight();
-    void moveDown();
-    void moveUp();
-    // We need to slightly modify rotation for
-    // O, S, Z and I
-    virtual void rotate(bool left);
+  void moveLeft();
+  void moveRight();
+  void moveDown();
+  void moveUp();
+  // We need to slightly modify rotation for
+  // O, S, Z and I
+  virtual void rotate(bool left);
 
-    // Getters
-    std::vector<Point> getCurrentLocation() const {return currentLocation_;}
-    NamedColors getTetrominoColor() const {return color_;}
-    int getTetrominoSize() const {return size_;};
-    int getCurrentAngle() const {return currentAngle_;}
+  // Getters
+  std::vector<Point> getCurrentLocation() const { return currentLocation_; }
+  NamedColors getTetrominoColor() const { return color_; }
+  int getTetrominoSize() const { return size_; };
+  int getCurrentAngle() const { return currentAngle_; }
 
-    int getStartingRow() const {return startRow_;}
-    int getStartingCol() const {return startCol_;}
+  int getStartingRow() const { return startRow_; }
+  int getStartingCol() const { return startCol_; }
 
-    // Setters
-    void setCurrentLocation(std::vector<Point> location) {currentLocation_ = location;}
-    void setCurrentAngle(int angle) {currentAngle_ = angle;}
+  // Setters
+  void setCurrentLocation(std::vector<Point> location) {
+    currentLocation_ = location;
+  }
+  void setCurrentAngle(int angle) { currentAngle_ = angle; }
 
-  protected:
-    // Each tetromino should define these separetly
-    NamedColors color_;
-    int startRow_;
-    int startCol_;
-    int centerIndex;
-    //
+protected:
+  // Each tetromino should define these separetly
+  NamedColors color_;
+  int startRow_;
+  int startCol_;
+  int centerIndex;
+  //
 
-    // Vector with points that define current position of the tetromino.
-    std::vector<Point> currentLocation_;
-    // Size of the tetrominos.
-    const int size_ = 4;
-    // Start angle.
-    int currentAngle_ = 0;  
-    // Rotation angle (always 90 degrees). We do need to convert it from
-    // radians to degrees.
-    const double rotation_angle = 90.0 * (M_PI / 180);
+  // Vector with points that define current position of the tetromino.
+  std::vector<Point> currentLocation_;
+  // Size of the tetrominos.
+  const int size_ = 4;
+  // Start angle.
+  int currentAngle_ = 0;
+  // Rotation angle (always 90 degrees). We do need to convert it from
+  // radians to degrees.
+  const double rotation_angle = 90.0 * (M_PI / 180);
 };

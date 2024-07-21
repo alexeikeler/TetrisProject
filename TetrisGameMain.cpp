@@ -1,17 +1,15 @@
 // Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
 // Code snippets from the lectures where used
 
+#include "./ParseArguments.h"
 #include "./TerminalManager.h"
 #include "./TetrisGame.h"
 #include "./Tetromino.h"
-#include "./ParseArguments.h"
 #include <iostream>
 
+std::vector<std::pair<Color, Color>> createColorVector() {
 
-std::vector<std::pair<Color, Color>> createColorVector()
-{
-
-    std::vector<std::pair<Color, Color>> colorVector;
+  std::vector<std::pair<Color, Color>> colorVector;
 
   std::pair MainColorPair =
       std::pair(Color(1.0, 0.0, 0.0), Color(0.0, 0.0, 0.0));
@@ -19,19 +17,19 @@ std::vector<std::pair<Color, Color>> createColorVector()
       std::pair(Color(0.0, 0.0, 0.0), Color(0.0, 0.0, 0.0));
   std::pair BordersColorPair =
       std::pair(Color(0, 0.522, 1), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoTColorPair = 
+  std::pair TetrominoTColorPair =
       std::pair(Color(0.153, 0.659, 0.047), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoLColorPair = 
+  std::pair TetrominoLColorPair =
       std::pair(Color(0.004, 0, 1), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoJColorPair = 
+  std::pair TetrominoJColorPair =
       std::pair(Color(0.906, 1, 0), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoOColorPair = 
+  std::pair TetrominoOColorPair =
       std::pair(Color(1.0, 0.6, 0.0), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoIColorPair = 
+  std::pair TetrominoIColorPair =
       std::pair(Color(1, 0, 0.886), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoZColorPair = 
+  std::pair TetrominoZColorPair =
       std::pair(Color(0.455, 0, 1), Color(0.0, 0.0, 0.0));
-  std::pair TetrominoSColorPair = 
+  std::pair TetrominoSColorPair =
       std::pair(Color(0, 0.859, 0.655), Color(0.0, 0.0, 0.0));
 
   std::pair WhileColorPair(Color(1, 1, 1), Color(0.0, 0.0, 0.0));
@@ -51,15 +49,14 @@ std::vector<std::pair<Color, Color>> createColorVector()
   return colorVector;
 }
 
-
 int main(int argc, char **argv) {
   // Create color vector.
   std::vector<std::pair<Color, Color>> colorVector = createColorVector();
-  
+
   // Create parser in order to parse arguments.
   Parser parser;
   parser.parseArguments(argc, argv);
-  
+
   // Get values from parsed args.
   int level = parser.getLevel();
   char rightRotationKey = parser.getRightRotationKey();

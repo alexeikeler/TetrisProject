@@ -2,23 +2,21 @@
 // Code snippets from the lectures where used
 
 #pragma once
-#include "AbstractTetrisGame.h"
 #include "./TerminalManager.h"
 #include "./Tetromino.h"
-#include <unordered_map>
+#include "AbstractTetrisGame.h"
 #include <deque>
-#include <set>
 #include <functional>
+#include <set>
+#include <unordered_map>
 
-
-class TetrisGame : public AbstractTetrisGame{
+class TetrisGame : public AbstractTetrisGame {
 public:
   // Constructor & destructor
   // rrk - right rotation key
   // lrk - left rotation key
   TetrisGame(TerminalManager *tm, int level, char rrk, char lrk);
   ~TetrisGame(){};
-  
 
   // Function for drawing data / game field / tetrominos on the screen.
   // --------------------------------------------
@@ -34,7 +32,6 @@ public:
 
   void drawStatistics();
   void updateStatisticsText(int tetrominoIndex);
-  
 
   void drawNextTetrominoText();
 
@@ -44,7 +41,6 @@ public:
 
   void drawGameField();
   // --------------------------------------------
-
 
   // Main game loop
   void play() override;
@@ -60,20 +56,18 @@ public:
   // which will result in "moving-like" behaviour
   // when combined with drawTetromino()
   void removeTetrominoFromScreen(std::vector<Point> location);
-  
+
   // "Remove" point from SCREEN (paint it black).
   void removePointFromScreen(Point point);
 
-  
   // "Place" tetromino in gameField
   void placeTetromino() override;
 
   // Decide what to do with the current tetromino
-  void decideAction(UserInput userInput, bool isArtificialMovement) override;  
+  void decideAction(UserInput userInput, bool isArtificialMovement) override;
 
   // Remove lines
   void reshapeGameField() override;
-
 
 private:
   TerminalManager *tm_;
@@ -84,7 +78,7 @@ private:
   // Coordinates of the "Box" for the next tetromino
   const int nextTetrominoRowStart = 20;
   const int nextTetrominoRowEnd = 25;
-  
+
   const int nextTetrominoColStart = 54;
   const int nextTetrominoColEnd = 60;
 
@@ -92,28 +86,24 @@ private:
   // to be able to draw next tetromino.
   std::vector<std::vector<Point>> shapes;
 
-
   // It's a type that will store functions from struct TetrominoShape.
-  using shapeFunctions = std::function<void(int, int, std::vector<Point>*, NamedColors)>;
-  
+  using shapeFunctions =
+      std::function<void(int, int, std::vector<Point> *, NamedColors)>;
+
   // map with functions that create concrete tetrominos shape.
   std::unordered_map<int, shapeFunctions> shapeMapper = {
-    {0, TetrominoShape::createIShape},
-    {1, TetrominoShape::createJShape},
-    {2, TetrominoShape::createLShape},
-    {3, TetrominoShape::createOShape},
-    {4, TetrominoShape::createSShape},
-    {5, TetrominoShape::createZShape},
-    {6, TetrominoShape::createTShape}
-  };
-  
+      {0, TetrominoShape::createIShape}, {1, TetrominoShape::createJShape},
+      {2, TetrominoShape::createLShape}, {3, TetrominoShape::createOShape},
+      {4, TetrominoShape::createSShape}, {5, TetrominoShape::createZShape},
+      {6, TetrominoShape::createTShape}};
+
   // Coordinates of the statistics
   const int statisticsRowStart = 13;
   const int statisticsColStart = 25;
   const int statisticsRowEnd = 34;
 
   // Coordinates of the "LINES-xxx" line and number of
-  // the removed lines 
+  // the removed lines
   const int linesRow = 12;
   const int linesCol = 43;
 
