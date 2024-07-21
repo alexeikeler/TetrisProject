@@ -1044,7 +1044,70 @@ TEST(MockTetrisGameCollision, MockTetrisGame)
 
 
     delete mtg.currentTetromino;
+}
 
+TEST(MockTetrisGameLineRemoving, MockTetrisGame)
+{
+    int level = 0;
+    char rrk = 's';
+    char lrk = 'a';
+    
+    UserInput moveDown;
+    moveDown.keycode_ = 258;
+
+    UserInput moveRight;
+    moveRight.keycode_ = 261;
+
+    UserInput moveLeft;
+    moveLeft.keycode_ = 260;
+
+    UserInput rotateLeft;
+    rotateLeft.keycode_ = lrk;
+
+    UserInput rotateRight;
+    rotateRight.keycode_ = rrk;
+
+    MockTetrisGame mtg(level, rrk, lrk);
+
+    // Form a line.
+
+    mtg.currentTetromino = new TetrominoI();
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveLeft, false);
+
+    while(!mtg.isCurrentTetrominoPlaced)
+    {
+        mtg.decideAction(moveDown, false);
+    }
+
+    // Avoid leaking
+    delete mtg.currentTetromino;
+
+    mtg.currentTetromino = new TetrominoI();
+    while(!mtg.isCurrentTetrominoPlaced)
+    {
+        mtg.decideAction(moveDown, false);
+    }
+
+    delete mtg.currentTetromino;
+
+    mtg.currentTetromino = new TetrominoO();
+    mtg.decideAction(moveRight, false);
+    mtg.decideAction(moveRight, false);
+    mtg.decideAction(moveRight, false);
+    mtg.decideAction(moveRight, false);
+
+    while(!mtg.isCurrentTetrominoPlaced)
+    {
+        mtg.decideAction(moveDown, false);
+    }
+
+    // Now we should have (19 * 3) + 40 points and 1 removed line.
+
+    ASSERT_EQ(1, mtg.destroyedLines);
+
+    delete mtg.currentTetromino;
 
 }
 // --------------------------------------------------------------------------------------------------------------------
