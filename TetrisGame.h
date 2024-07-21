@@ -11,7 +11,7 @@
 #include <functional>
 
 
-class TetrisGame {
+class TetrisGame : public AbstractTetrisGame{
 public:
   // Constructor & destructor
   // rrk - right rotation key
@@ -21,13 +21,15 @@ public:
 
   void drawLevelText();
   // Speed depends from level, so we might as well update it in the same function.
-  void updateLevelAndSpeed(int increaseLevelBy=0);
+  
+  //void updateLevelAndSpeed(int increaseLevelBy=0);
+  
   void updateLevelAndSpeedText();
 
   // Name of the function tells exactly what it does.
   // --------------------------------------------
   void drawScoreText();
-  void updateScore();
+  //void updateScore();
   void updateScoreText();
 
   void drawDestroyedLinesText();
@@ -35,7 +37,7 @@ public:
   void updateDestroyedLinesText();
 
   void drawStatistics();
-  void updateStatistics(int tetrominoIndex);
+  //void updateStatistics(int tetrominoIndex);
   void updateStatisticsText(int tetrominoIndex);
   
 
@@ -48,10 +50,10 @@ public:
 
 
   // Main game loop
-  void play();
+  void play() override;
 
   // Exit the game if it's over
-  void gameOver();
+  void gameOver() override;
 
   // Removing in this context means
   // drawing black pixels on top of the current coordinates
@@ -68,31 +70,31 @@ public:
   void drawTetromino();
   
   // "Place" tetromino in gameField
-  void placeTetromino();
+  void placeTetromino() override;
 
   // Decide what to do with the current tetromino
-  void decideAction(UserInput userInput, bool isArtificialMovement);  
+  void decideAction(UserInput userInput, bool isArtificialMovement) override;  
   
   // Check if tetromino colliding
-  Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
+  // Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
   
   // Method for finding and updating surface.
-  void updateSurface();
+  // void updateSurface();
 
   // Remove lines
-  void reshapeGameField();
+  void reshapeGameField() override;
 
   // Generate random tetrominos
-  void generateCurrentAndNext(int a = 0, int b = 6);
+  // void generateCurrentAndNext(int a = 0, int b = 6);
   
   // Generate random numbers
-  int generateRandomNumber(int a, int b);
+  // int generateRandomNumber(int a, int b);
 
   // Return pointer to the new tetromino object based on recieved number
-  NewAbstractTetromino* chooseTetromino(const int randomNumber);
+  // NewAbstractTetromino* chooseTetromino(const int randomNumber);
 
   // Convert int to string with leading zeroes
-  std::string intToString(int number, int maxLength);
+  // std::string intToString(int number, int maxLength);
 
 private:
   TerminalManager *tm_;
@@ -100,83 +102,83 @@ private:
   // To be able to mentain current and next tetromino
   // I found deque data structure quite usefull, because
   // we can accsess elements from front and back.
-  std::deque<int> deque;
+  //std::deque<int> deque;
 
   // Number of unique elements
-  const int numberOfTetrominos = 7;
+  //const int numberOfTetrominos = 7;
   
   // Size of game field (it's actually 20 x 10, because of "<" in loops)
-  static const int rows_ = 21;
-  static const int cols_ = 11;
+  //static const int rows_ = 21;
+  //static const int cols_ = 11;
 
   // Logical game "screen" where all blocks
   // will be stored. Based on values of this array
   // we will draw the picture on the screen.
-  std::unordered_map<Point, bool> gameField;
+  //std::unordered_map<Point, bool> gameField;
   
   // vector of highest points in columns
-  std::set<Point> surface;
+  //std::set<Point> surface;
 
 
   // To put our "game screen" in the middle
   // we will need some offset
-  const int offset_row = 14;
-  const int offset_col = 40;
+  //const int offset_row = 14;
+  //const int offset_col = 40;
 
   // Current tetromino which will be displayed on the screen
-  NewAbstractTetromino *currentTetromino;
+  //NewAbstractTetromino *currentTetromino;
 
   // To generate new tetrominos we will need
   // these random numbers.
-  int previousRandomNumber;
-  int currentRandomNumber;
-  int nextRandomNumber;
+  //int previousRandomNumber;
+  //int currentRandomNumber;
+  //int nextRandomNumber;
 
   // Falling speed for each level in ms.
-  std::unordered_map<int, int> fallingSpeed = {
-    {0, 800},
-    {1, 716},
-    {2, 633},
-    {3, 550},
-    {4, 466},
-    {5, 383},
-    {6, 300},
-    {7, 216},
-    {8, 133},
-    {9, 100},
-    {10, 83},
-    {11, 83},
-    {12, 83},
-    {13, 66},
-    {14, 66},
-    {15, 66},
-    {16, 50},
-    {17, 50},
-    {18, 50},
-    {19, 33},
-    {20, 33},
-    {21, 33},
-    {22, 33},
-    {23, 33},
-    {24, 33},
-    {25, 33},
-    {26, 33},
-    {27, 33},
-    {28, 33},
-    {29, 16},
-  };
+  // std::unordered_map<int, int> fallingSpeed = {
+  //   {0, 800},
+  //   {1, 716},
+  //   {2, 633},
+  //   {3, 550},
+  //   {4, 466},
+  //   {5, 383},
+  //   {6, 300},
+  //   {7, 216},
+  //   {8, 133},
+  //   {9, 100},
+  //   {10, 83},
+  //   {11, 83},
+  //   {12, 83},
+  //   {13, 66},
+  //   {14, 66},
+  //   {15, 66},
+  //   {16, 50},
+  //   {17, 50},
+  //   {18, 50},
+  //   {19, 33},
+  //   {20, 33},
+  //   {21, 33},
+  //   {22, 33},
+  //   {23, 33},
+  //   {24, 33},
+  //   {25, 33},
+  //   {26, 33},
+  //   {27, 33},
+  //   {28, 33},
+  //   {29, 16},
+  // };
 
   // Max level for the game.
-  const int maxLevel = 29;
+  //const int maxLevel = 29;
 
   // Falling speed (depends from currentLevel)
-  double currentSpeed = fallingSpeed[0];
+  //double currentSpeed = fallingSpeed[0];
 
   // Keys for rotation
   // These can't be const, because we need
   // to allow custom keys.
-  char leftRotationKey;
-  char rightRotationKey;
+  //char leftRotationKey;
+  //char rightRotationKey;
 
   // Coordinates of the "Box" for the next tetromino
   const int nextTetrominoRowStart = 20;
@@ -191,15 +193,15 @@ private:
 
   // Statistics map. First integer is the integer code for concrete tetromino,
   // second integer corresponds to the number of placed tetrominos.
-  std::unordered_map<int, int> statistics = {
-    {0, 0},
-    {1, 0},
-    {2, 0},
-    {3, 0},
-    {4, 0},
-    {5, 0},
-    {6, 0}
-  };
+  // std::unordered_map<int, int> statistics = {
+  //   {0, 0},
+  //   {1, 0},
+  //   {2, 0},
+  //   {3, 0},
+  //   {4, 0},
+  //   {5, 0},
+  //   {6, 0}
+  // };
 
   // It's a type that will store functions from struct TetrominoShape.
   using shapeFunctions = std::function<void(int, int, std::vector<Point>*, NamedColors)>;
@@ -226,30 +228,30 @@ private:
   const int linesCol = 43;
   // We will need this variable to update the level
   // properly
-  int previousQuotient = 0;
-  int destroyedLines = 0;
+  //int previousQuotient = 0;
+  //int destroyedLines = 0;
 
   // Coordinates of the "LEVEL-xxx" line and current level.
   const int levelRow = 10;
   const int levelCol = 43;
-  int currentLevel = 0;
+ // int currentLevel = 0;
 
   // Coordinates of the "Score - xxxxxx" line,
   // and variables to store earned points per tetromino
   // life cycle and current points.
   const int scoreRow = 17;
   const int scoreCol = 54;
-  int earnedPoints = 0;
-  int currentPoints = 0;
+  //int earnedPoints = 0;
+  //int currentPoints = 0;
 
   // Map for points which player gets
   // after removing certain number of rows.
-  std::unordered_map<int, int> pointsForRemovedRows = {
-    {1, 40},
-    {2, 100},
-    {3, 300},
-    {4, 1200}
-  };
+  // std::unordered_map<int, int> pointsForRemovedRows = {
+  //   {1, 40},
+  //   {2, 100},
+  //   {3, 300},
+  //   {4, 1200}
+  // };
 
   // Hold "Game over" for 1.5 sec.
   const int gameOverTimeroutMs = 1500;
