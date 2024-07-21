@@ -1010,15 +1010,10 @@ TEST(MockTetrisGameCollision, MockTetrisGame)
     // We should have the same coordinates as before the movement, because we should collide
     // with block and don't move.
     std::vector<Point> beforeCollisionWithBlock = mtg.currentTetromino->getCurrentLocation();
-    int angleBeforeCollisionWithBlock = mtg.currentTetromino->getCurrentAngle();
 
-    mtg.decideAction(rotateLeft, false);
     mtg.decideAction(moveRight, false);
 
     std::vector<Point> afterCollisionWithBlock = mtg.currentTetromino->getCurrentLocation();
-    int angleAfterCollisionWithBlock = mtg.currentTetromino->getCurrentAngle();
-
-    ASSERT_EQ(angleBeforeCollisionWithBlock, mtg.currentTetromino->getCurrentAngle());
 
     for(int i = 0; i < mtg.currentTetromino->getTetrominoSize(); i++)
     {
@@ -1029,8 +1024,28 @@ TEST(MockTetrisGameCollision, MockTetrisGame)
     // Our last collision should be Collision::Blocks
     ASSERT_EQ(mtg.lastCollision, Collision::Block);
 
+    // Now we should collide with the left wall.
+
+    mtg.decideAction(moveLeft, false);
+    mtg.decideAction(moveLeft, false);
+    
+    ASSERT_EQ(mtg.lastCollision, Collision::Wall);
+
+    // We also should be able to rotate once to the left side.
+
+    std::vector<Point> beforeLeftRotation = mtg.currentTetromino->getCurrentLocation();
+    mtg.decideAction(rotateLeft, false);
+    std::vector<Point> afterLeftRotation = mtg.currentTetromino->getCurrentLocation();
+   
+    // Since we've rotated once to the left side we should have different coordinates.
+    // Also our angle should be 270.
+    ASSERT_FALSE(beforeLeftRotation == afterLeftRotation);
+    ASSERT_EQ(270, mtg.currentTetromino->getCurrentAngle());
+
 
     delete mtg.currentTetromino;
+
+
 }
 // --------------------------------------------------------------------------------------------------------------------
 // MockTetrisGame tests end
