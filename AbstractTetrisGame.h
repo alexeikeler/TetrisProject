@@ -68,8 +68,8 @@ class AbstractTetrisGame{
         char leftRotationKey;
         char rightRotationKey;
 
-        int previousQuotient;
-        int destroyedLines;
+        int previousQuotient = 0;
+        int destroyedLines = 0;
         int currentLevel = 0;
 
         int earnedPoints = 0;

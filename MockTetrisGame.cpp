@@ -51,6 +51,8 @@ void MockTetrisGame::placeTetromino()
     gameField.erase(point);
     gameField.insert(std::pair(point, true));
   }
+
+    isCurrentTetrominoPlaced = false;
 }
 
 void MockTetrisGame::decideAction(UserInput userInput, bool isArtificialMovement) {

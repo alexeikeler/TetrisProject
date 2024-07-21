@@ -1068,6 +1068,10 @@ TEST(MockTetrisGameLineRemoving, MockTetrisGame)
     rotateRight.keycode_ = rrk;
 
     MockTetrisGame mtg(level, rrk, lrk);
+    // Set current number of desrtoyed lines to 9.
+    // After destroying one more lines we should
+    // also update our level.
+    mtg.destroyedLines = 9;
 
     // Form a line.
 
@@ -1085,6 +1089,8 @@ TEST(MockTetrisGameLineRemoving, MockTetrisGame)
     delete mtg.currentTetromino;
 
     mtg.currentTetromino = new TetrominoI();
+    mtg.decideAction(moveRight, false);
+
     while(!mtg.isCurrentTetrominoPlaced)
     {
         mtg.decideAction(moveDown, false);
@@ -1103,9 +1109,9 @@ TEST(MockTetrisGameLineRemoving, MockTetrisGame)
         mtg.decideAction(moveDown, false);
     }
 
-    // Now we should have (19 * 3) + 40 points and 1 removed line.
-
-    ASSERT_EQ(1, mtg.destroyedLines);
+    // Now we should have first level and 10 destroyed lines.
+    ASSERT_EQ(10, mtg.destroyedLines);
+    ASSERT_EQ(1, mtg.currentLevel);
 
     delete mtg.currentTetromino;
 
