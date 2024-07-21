@@ -14,6 +14,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 
+
 TEST(MockTerminalManagerFunctionality, MockTerminalManager)
 {
   MockTerminalManager mtm(10, 10);
@@ -70,6 +71,7 @@ TEST(CLAPLongFunctionality, Parser)
     ASSERT_EQ('z', longArgsParser.getRightRotationKey());
 }
 
+// Simple moving test.
 TEST(TetrominoMovement, Tetromino)
 {
     NewAbstractTetromino *tetr[7] = {
@@ -121,6 +123,8 @@ TEST(TetrominoMovement, Tetromino)
 // --------------------------------------------------------------------------------------------------------------------
 
 
+// First we are creating tetromino, then checking standart values.
+// After that we are checking if the created shape is correct.
 TEST(Tetromino_I_Creation, Tetromino)
 {
     NewAbstractTetromino *tetrI = new TetrominoI();
@@ -295,6 +299,20 @@ TEST(Tetromino_S_Creation, Tetromino)
 // --------------------------------------------------------------------------------------------------------------------
 // Rotation tests start
 // --------------------------------------------------------------------------------------------------------------------
+
+// Rotation test follow the same pattern, but because
+// coordinates differ between tetromino shapes
+// we can't really put them in one test without it being very big and
+// convoluted.
+
+// Every rotation test has following structure:
+// 1. Create new tetromino.
+// 2. Test once right rotation
+// 3. Compare angle and coordinates before and after rotation.
+// 4. Perform 3 more right rotation
+// 5. Check if coordinates are the same as the one in the beginning
+// (this should be the case since we are performing 360 degree rotation)
+// 6. Repeat the same with left rotation.
 
 TEST(Tetromino_I_Rotation, Tetromino)
 {  

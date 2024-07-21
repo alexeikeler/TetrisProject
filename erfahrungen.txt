@@ -1,1 +1,9 @@
-1111
+Time: ~1.5 - 2 weeks.
+
+Usage:
+
+./TetrisGameMain --level=<number> --rightRotationKey=<key> --leftRotationKey=<key>
+
+./TetrisGameMain --help to see a bit more detailed description.
+
+Arguments are optional. The order does not play a role.

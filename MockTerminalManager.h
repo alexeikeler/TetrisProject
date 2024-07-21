@@ -8,7 +8,7 @@
 #include "./AbstractTerminalManager.h"
 #include "./Point.h"
 
-
+// Mostly the same as in the previous exercise.
 class MockTerminalManager : public AbstractTerminalManager{
     public:
         MockTerminalManager(int numRows, int numCols);

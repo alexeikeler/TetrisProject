@@ -14,8 +14,12 @@ class MockTetrisGame : public AbstractTetrisGame{
         friend class MockTetrisGameCollision_MockTetrisGame_Test;
         friend class MockTetrisGameLineRemoving_MockTetrisGame_Test;
         
+        // We don't need terminal manager for this.
         MockTetrisGame(int level, char rrk, char lrk);
         ~MockTetrisGame() {};
+
+        // We will need to override some of the methods
+        // for test purposes.
         void play() override;
         void gameOver() override;
         void decideAction(UserInput userInput, bool isAritificialMovement) override;
@@ -23,6 +27,7 @@ class MockTetrisGame : public AbstractTetrisGame{
         void reshapeGameField() override;
 
     private:
+        // Some additional variables for testing.
         bool isGameOver = false;
         Collision lastCollision = Collision::Nothing;
         bool isCurrentTetrominoPlaced = false;

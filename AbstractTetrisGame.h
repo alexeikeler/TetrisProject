@@ -1,3 +1,6 @@
+// Copyright: 2024 by Ioan Oleksii Kelier keleralexei@gmail.com
+// Code snippets from the lectures where used
+
 #pragma once
 
 #include "./AbstractTetromino.h"
@@ -28,6 +31,10 @@ class AbstractTetrisGame{
         // Should be implemented separetly by
         // MockTetrisGame and TetrisGame.
         virtual void play() = 0;
+
+        // Game over.
+        // Should be implemented separetly by
+        // MockTetrisGame and TetrisGame.
         virtual void gameOver() = 0;
 
         // Game logic.
@@ -35,11 +42,15 @@ class AbstractTetrisGame{
         // MockTetrsGame and TetrisGame.
         virtual void decideAction(UserInput userInput, bool isAritificialMovement) = 0;
         virtual void placeTetromino() = 0;
+
         Collision isColliding(bool downPressed, bool leftRotaion, bool rightRotation, std::vector<Point> previousLocation);
         void updateSurface();
         // Should be implemented separetly by
         // MockTetrsGame and TetrisGame.
         virtual void reshapeGameField() = 0;
+
+        // Simple method for choosing new Tetromino based
+        // on generated random numbers.
         NewAbstractTetromino* chooseTetromino(int randomNumber);
         
         // Calculations.
@@ -59,25 +70,46 @@ class AbstractTetrisGame{
         const int maxLevel = 29;
         const int gameOverTimeoutMs = 1'500;
 
+        // Speed of the tetrominos (in ms.)
         int currentSpeed;
         
+        // Variables to store rundom numbers, based on which
+        // we will create current and next tetrominos.
         int previousRandomNumber;
         int currentRandomNumber;
         int nextRandomNumber;
         
+        // Keys for rotation.
         char leftRotationKey;
         char rightRotationKey;
 
+        // Level and destroyed lines. We will
+        // use qutient and remainder to for
+        // the level update.
         int previousQuotient = 0;
         int destroyedLines = 0;
         int currentLevel = 0;
 
+        // Points.
         int earnedPoints = 0;
         int currentPoints = 0;
 
+        // I've chosen a deque data structure to manipulate
+        // current and next tetromino, because we will need to 
+        // use both of them in one game cycle. And in next game cycle 
+        // current "next" will become "current".
         std::deque<int> deque;
+
+        // Game field where placed tetrominos (points) will be stored.
         std::unordered_map<Point, bool> gameField;
+        // A set with points which will form surface of the game.
+        //In other words, this set contains points after collision with which 
+        // the current figure dies and the new one starts its cycle.
         std::set<Point> surface;
+
+        // Falling speed. It's a bit misleading that it's in ms, but I've
+        // found such a representation rather conviniet.
+        // See TetrisGame play() for more details.
         std::unordered_map<int, int> fallingSpeed = {
                 {0, 800},
                 {1, 716},
@@ -111,6 +143,7 @@ class AbstractTetrisGame{
                 {29, 16},
         };
 
+    // Map with statistics of the placed tetrominos.
     std::unordered_map<int, int> statistics = {
         {0, 0},
         {1, 0},
@@ -121,6 +154,8 @@ class AbstractTetrisGame{
         {6, 0}
     };
 
+  // Map with points for the number of destroyed lines.
+  // Helps to avoid if-else code.
   std::unordered_map<int, int> pointsForRemovedRows = {
     {1, 40},
     {2, 100},
