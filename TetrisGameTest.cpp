@@ -70,6 +70,52 @@ TEST(CLAPLongFunctionality, Parser)
     ASSERT_EQ('z', longArgsParser.getRightRotationKey());
 }
 
+TEST(TetrominoMovement, Tetromino)
+{
+    NewAbstractTetromino *tetr[7] = {
+        new TetrominoI(),
+        new TetrominoJ(),
+        new TetrominoL(),
+        new TetrominoT(),
+        new TetrominoO(),
+        new TetrominoZ(),
+        new TetrominoS()
+    };
+
+    std::vector<Point> beforeMovement;
+    std::vector<Point> afterMovement;
+
+    for(auto tetromino : tetr)
+    {
+        beforeMovement = tetromino->getCurrentLocation();
+        tetromino->moveDown();
+        afterMovement = tetromino->getCurrentLocation();
+        for(int i = 0; i < tetromino->getTetrominoSize(); i++)
+        {
+            ASSERT_EQ(beforeMovement[i].row + 1, afterMovement[i].row);
+        }
+        
+        beforeMovement = tetromino->getCurrentLocation();
+        tetromino->moveLeft();
+        afterMovement = tetromino->getCurrentLocation();
+        for(int i = 0; i < tetromino->getTetrominoSize(); i++)
+        {
+            ASSERT_EQ(beforeMovement[i].col - 1, afterMovement[i].row);
+        }
+        
+        beforeMovement = tetromino->getCurrentLocation();
+        tetromino->moveRight();
+        afterMovement = tetromino->getCurrentLocation();
+        for(int i = 0; i < tetromino->getTetrominoSize(); i++)
+        {
+            ASSERT_EQ(beforeMovement[i].col + 1, afterMovement[i].row);
+        }
+        
+
+        delete tetromino;
+    }
+}
+
 // --------------------------------------------------------------------------------------------------------------------
 // Creation tests start
 // --------------------------------------------------------------------------------------------------------------------
