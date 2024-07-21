@@ -100,7 +100,7 @@ TEST(TetrominoMovement, Tetromino)
         afterMovement = tetromino->getCurrentLocation();
         for(int i = 0; i < tetromino->getTetrominoSize(); i++)
         {
-            ASSERT_EQ(beforeMovement[i].col - 1, afterMovement[i].row);
+            ASSERT_EQ(beforeMovement[i].col - 1, afterMovement[i].col);
         }
         
         beforeMovement = tetromino->getCurrentLocation();
@@ -108,7 +108,7 @@ TEST(TetrominoMovement, Tetromino)
         afterMovement = tetromino->getCurrentLocation();
         for(int i = 0; i < tetromino->getTetrominoSize(); i++)
         {
-            ASSERT_EQ(beforeMovement[i].col + 1, afterMovement[i].row);
+            ASSERT_EQ(beforeMovement[i].col + 1, afterMovement[i].col);
         }
         
 
@@ -292,29 +292,6 @@ TEST(Tetromino_S_Creation, Tetromino)
 // Creation tests end
 // --------------------------------------------------------------------------------------------------------------------
 
-
-// //Not working 
-
-// TEST(CLAPShortFunctionality, Parser)
-// {
-//     int argc = 4;
-//     char programmName[] = "./TetrisGameMain";
-
-//     char shortArgv1[] = "-b 15";
-//     char shortArgv2[] = "-l p";
-//     char shortArgv3[] = "-r k";
-
-//     char *shortArgv[] = {programmName, shortArgv1, shortArgv2, shortArgv3};
-
-//     Parser shortArgsParser;
-//     shortArgsParser.parseArguments(argc, shortArgv);
-
-//     ASSERT_EQ(15, shortArgsParser.getLevel());
-//     ASSERT_EQ('p', shortArgsParser.getLeftRotationKey());
-//     ASSERT_EQ('k', shortArgsParser.getRightRotationKey());
-// }
-
-
 // --------------------------------------------------------------------------------------------------------------------
 // Rotation tests start
 // --------------------------------------------------------------------------------------------------------------------
@@ -322,7 +299,6 @@ TEST(Tetromino_S_Creation, Tetromino)
 TEST(Tetromino_I_Rotation, Tetromino)
 {  
     NewAbstractTetromino *tetrI = new TetrominoI();
-    
     //RIGHT ROTATION.
     std::vector<Point> locationBeforeRotationI = tetrI->getCurrentLocation();
     //0
