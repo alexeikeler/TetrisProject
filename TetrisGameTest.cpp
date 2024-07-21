@@ -923,10 +923,34 @@ TEST(MockTetrisGamePlacement, MockTetrisGame)
         ASSERT_TRUE(it != mtg.surface.end());
     }
 
+    // Check score
     ASSERT_EQ(19, mtg.currentPoints);
 
     delete mtg.currentTetromino;
+}
+
+TEST(MockTetrisGameIsGameOver, MockTetrisGame)
+{
+    MockTetrisGame mtg(0, 's', 'a');
     
+    UserInput moveDown;
+    moveDown.keycode_ = 258;
+    
+    mtg.currentTetromino = new TetrominoJ();
+    // Place some blocks.
+    for(int i = mtg.offset_col; i < mtg.offset_col + mtg.cols_; i++)
+    {
+        mtg.gameField[Point{15, i, NamedColors::TETROMINO_I}];
+    }
+
+    // Now the game should end because our current tetromino will connect with
+    // other tetromino and at the same time it will be touching the "roof".
+
+    mtg.decideAction(moveDown, false);
+
+    ASSERT_TRUE(mtg.isGameOver);
+
+    delete mtg.currentTetromino;
 }
 // --------------------------------------------------------------------------------------------------------------------
 // MockTetrisGame tests end

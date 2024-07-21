@@ -10,6 +10,7 @@ class MockTetrisGame : public AbstractTetrisGame{
         // Instead of writing tons of getters I've decided to use friend test.
         friend class MockTetrisGameSimpleMovement_MockTetrisGame_Test;
         friend class MockTetrisGamePlacement_MockTetrisGame_Test;
+        friend class MockTetrisGameIsGameOver_MockTetrisGame_Test;
         
         MockTetrisGame(int level, char rrk, char lrk);
         ~MockTetrisGame() {};
